@@ -23,7 +23,7 @@ public class Auth {
 	static Credential authorize() throws Exception {
 		// load client secres
 		GoogleClientSecrets clientSecrets = GoogleClientSecrets.load(JSON_FACTORY,
-				new InputStreamReader(MyResource.class.getResourceAsStream("/sclient_secrets.json")));
+				new InputStreamReader(MyResource.class.getResourceAsStream("/client_secrets.json")));
  		if (clientSecrets.getDetails().getClientId().startsWith("Enter")
 				|| clientSecrets.getDetails().getClientSecret().startsWith("Enter ")) {
 			
