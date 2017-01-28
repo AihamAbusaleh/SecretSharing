@@ -1,24 +1,16 @@
 package driveRESTful;
 
  
-
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
+import java.net.MalformedURLException;
 import java.net.URL;
 
-import javax.swing.plaf.InputMapUIResource;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
-
 import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
 import org.glassfish.jersey.media.multipart.FormDataParam;
 
@@ -26,6 +18,8 @@ import com.google.api.client.auth.oauth2.Credential;
 import com.google.api.client.googleapis.javanet.GoogleNetHttpTransport;
 import com.google.api.client.util.store.FileDataStoreFactory;
 import com.google.api.services.drive.Drive;
+
+import algorithm.ida.FileSplitter;
 
 /**
  * Root resource (exposed at "myresource" path)
@@ -48,11 +42,9 @@ public class MyResource {
 	@POST
 	@Path("/upload")
 	@Consumes(MediaType.MULTIPART_FORM_DATA)
-	public void upload(@FormDataParam("file") java.io.File file,
-			@FormDataParam("file") FormDataContentDisposition fileDetail
-			) {
+	public String upload(@FormDataParam("file") java.io.File file,
+						@FormDataParam("file") FormDataContentDisposition fileDetail) throws MalformedURLException {
 		
-	
 		
  		try {
 			Auth.httpTransport = GoogleNetHttpTransport.newTrustedTransport();
@@ -62,16 +54,18 @@ public class MyResource {
 			// set up the global Drive instance
 			UploadMethod.drive = new Drive.Builder(Auth.httpTransport, Auth.JSON_FACTORY, credential)
 					.setApplicationName(UploadMethod.APPLICATION_NAME).build();
+ 			
+		
+			  UploadMethod.uploadFile(true, (  fileDetail.getFileName()));
 
-		 UploadMethod.uploadFile(true,fileDetail.getFileName());
-
-			// return "succ ";
+			  return "The File was seccsesfully uploaded .....";
 		} catch (IOException e) {
 			System.err.println(e.getMessage());
 		} catch (Throwable t) {
 			t.printStackTrace();
 		}
 		System.exit(1);
+		return "Faild to upload the File. .. .";
 
 	}
 

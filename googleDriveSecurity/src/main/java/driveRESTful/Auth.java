@@ -1,6 +1,5 @@
 package driveRESTful;
 
-
 import java.io.InputStreamReader;
 import java.util.Collections;
 
@@ -22,20 +21,19 @@ public class Auth {
 	static HttpTransport httpTransport;
 
 	static Credential authorize() throws Exception {
-		// load client secrets
+		// load client secres
 		GoogleClientSecrets clientSecrets = GoogleClientSecrets.load(JSON_FACTORY,
-				new InputStreamReader(MyResource.class.getResourceAsStream("/client_secrets.json")));
-		if (clientSecrets.getDetails().getClientId().startsWith("Enter")
+				new InputStreamReader(MyResource.class.getResourceAsStream("/sclient_secrets.json")));
+ 		if (clientSecrets.getDetails().getClientId().startsWith("Enter")
 				|| clientSecrets.getDetails().getClientSecret().startsWith("Enter ")) {
-			System.out.println("Enter Client ID and Secret from https://code.google.com/apis/console/?api=drive "
-					+ "into drive-cmdline-sample/src/main/resources/client_secrets.json");
+			
 			System.exit(1);
 		}
 		// set up authorization code flow
 		GoogleAuthorizationCodeFlow flow = new GoogleAuthorizationCodeFlow.Builder(httpTransport, JSON_FACTORY,
 				clientSecrets, Collections.singleton(DriveScopes.DRIVE_FILE)).setDataStoreFactory(dataStoreFactory)
 						.build();
-		// authorize
+		// authorize 
 		return new AuthorizationCodeInstalledApp(flow, new LocalServerReceiver()).authorize("user");
 	}
 }
