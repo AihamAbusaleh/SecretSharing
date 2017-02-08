@@ -96,4 +96,9 @@ public class CryptoUtils {
 			throw new CryptoException("Error encrypting/decrypting file", ex);
 		}
 	}
+	
+	public static void main(String[] args) throws InvalidAlgorithmParameterException, CryptoException{
+	 //	encrypt(new File("D:/testen.txt.encrypted_0.splt"), new File("D:/ENCENCENCENCENC.txt"));
+	 	decrypt(new File("D:/ENCENCENCENCENC.txt"), new File("D:/DECCCCCCCCC.txt"));
+	}
 }

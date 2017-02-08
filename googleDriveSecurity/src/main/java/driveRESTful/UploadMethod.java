@@ -23,7 +23,7 @@ public class UploadMethod {
 	public static File uploadFile(boolean useDirectUpload, String myFile  ) throws Exception {
 	//	String parentId = "0B2A16ATWN2_Wfm50bk1INlFBUW9hNk1QM3VRclJqY0Q4OUNPY2EtS1k5eHdVMlZkVFpwZFk";
 		java.io.File ORIGINAL_FILE = new java.io.File("D:/" +  myFile);
-		java.io.File getEncFile = FileSplitter.splitMyOriginalFileIntoSlices(ORIGINAL_FILE);
+		java.io.File getEncFile = FileSplitter.splitMyOriginalFileIntoSlices(ORIGINAL_FILE, 6, 3);
 		java.io.File DECRYPTED_FILE = new java.io.File(ORIGINAL_FILE.getParent() + getEncFile); 
   		File fileMetadata = new File();
 		fileMetadata.setTitle(DECRYPTED_FILE.getName());

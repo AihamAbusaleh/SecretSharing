@@ -1,15 +1,16 @@
+body {
+    background-image: url("http://www.webnews.it/wp-content/uploads/2014/12/google_drive-540x320.jpg");
+    background-repeat: no-repeat;
+    background-size: 1290px 650px;
+  }
+
 .upload_form_cont {
-    background: -moz-linear-gradient(#ffffff, #f2f2f2);
-    background: -ms-linear-gradient(#ffffff, #f2f2f2);
-    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%, #ffffff), color-stop(100%, #f2f2f2));
-    background: -webkit-linear-gradient(#ffffff, #f2f2f2);
-    background: -o-linear-gradient(#ffffff, #f2f2f2);
+	background: none;
+    
     filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ffffff', endColorstr='#f2f2f2');
     -ms-filter: "progid:DXImageTransform.Microsoft.gradient(startColorstr='#ffffff', endColorstr='#f2f2f2')";
-    background: linear-gradient(#ffffff, #f2f2f2);
-
-    color:#000;
-    overflow:hidden;
+ 
+     overflow:hidden;
 }
 #upload_form {
     float:left;
@@ -17,6 +18,7 @@
     width:700px;
 }
 #preview {
+	background: transparent;
     background-color:#fff;
     display:block;
     float:right;
@@ -58,15 +60,15 @@ input[type=button] {
     background: linear-gradient(#ffffff, #dfdfdf);
 }
 #image_file {
-    width:400px;
+    width:600px;
 }
 #progress_info {
-    font-size:10pt;
+    font-size:20pt;
 }
 #fileinfo,#error,#error2,#abort,#warnsize {
-    color:#aaa;
+    color:blue;
     display:none;
-    font-size:10pt;
+    font-size:20pt;
     font-style:italic;
     margin-top:10px;
 }
@@ -82,15 +84,10 @@ input[type=button] {
     -o-border-radius:10px;
     -webkit-border-radius:10px;
 
-    background: -moz-linear-gradient(#66cc00, #4b9500);
-    background: -ms-linear-gradient(#66cc00, #4b9500);
-    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%, #66cc00), color-stop(100%, #4b9500));
-    background: -webkit-linear-gradient(#66cc00, #4b9500);
-    background: -o-linear-gradient(#66cc00, #4b9500);
+   background:none;
     filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#66cc00', endColorstr='#4b9500');
     -ms-filter: "progid:DXImageTransform.Microsoft.gradient(startColorstr='#66cc00', endColorstr='#4b9500')";
-    background: linear-gradient(#66cc00, #4b9500);
-}
+ }
 #progress_percent {
     float:right;
 }
@@ -108,12 +105,8 @@ input[type=button] {
     -webkit-border-radius:10px;
 
     box-shadow: 0 0 5px #ccc;
-    background: -moz-linear-gradient(#bbb, #eee);
-    background: -ms-linear-gradient(#bbb, #eee);
-    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%, #bbb), color-stop(100%, #eee));
-    background: -webkit-linear-gradient(#bbb, #eee);
-    background: -o-linear-gradient(#bbb, #eee);
+   
     filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#bbb', endColorstr='#eee');
     -ms-filter: "progid:DXImageTransform.Microsoft.gradient(startColorstr='#bbb', endColorstr='#eee')";
-    background: linear-gradient(#bbb, #eee);
+    background: none;
 }

@@ -1,5 +1,8 @@
 package algorithm.ida;
 
+import java.util.Arrays;
+import java.util.Random;
+
 import org.ejml.simple.SimpleMatrix;
 
 /**
@@ -112,8 +115,30 @@ public class Converting {
 		int[][] bidi = new int[rows][cols];
 		for (int i = 0; i < rows; i++) {
 			System.arraycopy(array, (i * cols), bidi[i], 0, cols);
-		}
+ 		}
 		return bidi;
 	}
 
+	public static double[][] RandomArray(int max, int min) {
+	    double[][] randomMatrix = new double [max][min];
+
+	    Random rand = new Random(); 
+	    rand.setSeed(System.currentTimeMillis()); 
+	    for (int i = 0; i < max; i++) {     
+	        for (int j = 0; j < min; j++) {
+	            Integer r = rand.nextInt()% 10; 
+	            randomMatrix[i][j] = Math.abs(r);
+	        }
+ 	    }
+	    
+//		for (int i = 0; i < max; i++) {
+//			for (int j = 0; j < min; j++) {
+//				vandermonde[i][j] = (j == 0 ? 1 : (vandermonde[i][j - 1] * i));
+//				System.out.println(Arrays.toString(vandermonde[i]));
+//
+//			}
+//		}
+
+	    return randomMatrix;
+	}
 }

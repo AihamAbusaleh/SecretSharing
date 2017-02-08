@@ -6,6 +6,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.Arrays;
+ 
 import org.ejml.simple.SimpleMatrix;
 
  import algorithm.aes256sha256.CryptoUtils;
@@ -14,17 +15,18 @@ public class FileSplitter {
 
 	/**
 	 * 
+	 * @param min 
+	 * @param max 
 	 * @param theOrigignalFile
 	 *            to be divided into 2 slices
 	 * 
 	 * @return Matrix F transposed from the original File
 	 * @throws Exception 
 	 */
-	public static SimpleMatrix createMatrixF(File encryptedFile) throws Exception {
+	public static SimpleMatrix createMatrixF(File encryptedFile,  int min) throws Exception {
 
 		
-		final int min = 2; // the number of slices in order to recombine File is 2
-		
+ 	 
 		
 		byte[] fileF = new byte[(int) encryptedFile.length()];
 		byte[][] matrixF;
@@ -58,7 +60,7 @@ public class FileSplitter {
 			fMatrix = new SimpleMatrix(matrixFToDouble);
 			// transpose the matrix F(thefile) to get 2 rows and number of cols
 			transposedF = fMatrix.transpose();
- 		} catch (FileNotFoundException ex) {
+   		} catch (FileNotFoundException ex) {
 			System.out.println("the file does not exist");
 		} catch (IOException ex) {
 			System.out.println("cannot read/write from/to a file");
@@ -77,36 +79,42 @@ public class FileSplitter {
 	 *            the file to be divided into slices
 	 * @throws Exception 
 	 */
-	public static File splitMyOriginalFileIntoSlices(File theOrigignalFile) throws Exception {
+	public static File splitMyOriginalFileIntoSlices(File theOrigignalFile, int max, int min) throws Exception {
 
 		File newSource = new File(theOrigignalFile.getAbsolutePath() + ".encrypted");
 		File encryptedFile =  CryptoUtils.encrypt(theOrigignalFile, newSource);
 	 
-		SimpleMatrix matrixF = createMatrixF(encryptedFile); // F Matrix
-		SimpleMatrix aMatrix = createMatrixA(); // A Matrix
+		SimpleMatrix matrixF = createMatrixF(encryptedFile,  min); // F Matrix
+		SimpleMatrix aMatrix = createMatrixA(max, min); // A Matrix
 		SimpleMatrix cMatrix = aMatrix.mult(matrixF); // A * F = C
 		// extract the first 2 slices (first 2 rows ) from the C matrix and make
 		// file from each one
-		SimpleMatrix ccMatrix = cMatrix.extractMatrix(0, matrixF.numRows(), 0, cMatrix.numCols());
+	/////////	SimpleMatrix ccMatrix = cMatrix.extractMatrix(0, matrixF.numRows(), 0, cMatrix.numCols());
 
-		int[][] ccMAtrixInt = Converting.castingTo2dInt(ccMatrix);
-		File[] fileShares = new File[ccMatrix.numRows()]; // make 2 files
-
+		int[][] ccMAtrixInt = Converting.castingTo2dInt(cMatrix);
+		int[][] aMAtrixInt = Converting.castingTo2dInt(aMatrix);
+		
+		File[] fileShares = new File[cMatrix.numRows()]; // make all files
+		cMatrix.print();
 		try {
-			for (int i = 0; i < ccMatrix.numRows(); i++) {
+			for (int i = 0; i < cMatrix.numRows(); i++) {
 				// make file with new extensions , ( orginal.txt_0.splt )
 				fileShares[i] = new File(encryptedFile.getName() + "_" + i + ".splt");
  				// store them in Parent directory or in the project, here need to remove getParent
 				PrintWriter out = new PrintWriter(theOrigignalFile.getParent() + fileShares[i]);
 				// print the first row to file and the secound row to another
 				// file
- 				for (int j = 0; j < ccMatrix.numCols(); j++) {
-					out.print(( ccMAtrixInt[i][j])  + " ");
+ 				for (int j = 0; j < cMatrix.numCols(); j++) {
+					out.print(( ccMAtrixInt[i][j])  + " " );
+				
 				}
+ 				for (int k = 0; k < aMatrix.numCols(); k++) {
+ 					out.print("?"+ aMAtrixInt[i][k]);
+ 				}
+  	//	 		CryptoUtils.encrypt(new File(theOrigignalFile.getParent() + fileShares[i]), new File("D:/TESTTESTETESTETESTE" + i +".txt"));
 				out.close();
 			}
-		//	CryptoUtils.encrypt( fileShares[0], fileShares[0] );
-			
+ 			
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -120,18 +128,20 @@ public class FileSplitter {
 	 * 
 	 * @return A Matrix
 	 */
-	public static SimpleMatrix createMatrixA() {
+	public static SimpleMatrix createMatrixA(int max, int min ) {
+		// max x min -> row x col
+	//	 double a[][] = new double[][] { { 5, 3 ,4}, { 7, 4 ,6}, { 2, 1 ,6} ,{ 2, 1 ,6} ,{ 2, 1 ,6} ,{ 2, 1 ,6} };
+	 	SimpleMatrix aMatrix = new SimpleMatrix(Converting.RandomArray(max, min));
+	//	SimpleMatrix aMatrix = new SimpleMatrix(a);
 
-		double a[][] = new double[][] { { 5, 3 }, { 7, 4 }, { 2, 1 } };
-		SimpleMatrix aMatrix = new SimpleMatrix(a);
-
-		return aMatrix;
+		aMatrix.print();
+	 
+  		return aMatrix;
 	}
-
+ 
 	public static void main(String... aArgs) throws Exception {
-		FileSplitter.splitMyOriginalFileIntoSlices(new File("D:/testen.txt"));
-		
-	}
+		  FileSplitter.splitMyOriginalFileIntoSlices(new File("D:/testen.txt"), 10, 3);
+   	}
 	
 	 
 }
