@@ -47,17 +47,15 @@ public class FileRecombiner {
 		int i = 0;
 
 		List<File> allFile = new ArrayList<File>();
-		if (filesInDir.length != min) {
-			System.out.println("please select just " + min + " files");
-			return;
-		}
+
 		// gets files with extension 'splt'
 		for (File f : filesInDir) {
+			if (i != min) {
+				allSlices[i] = new File(f.getAbsolutePath());
 
-			allSlices[i] = new File(f.getAbsolutePath());
-
-			allFile.add(allSlices[i]);
-			i++;
+				allFile.add(allSlices[i]);
+				i++;
+			}
 		}
 
 		// split the added extension in the slices and make the new original
@@ -99,7 +97,11 @@ public class FileRecombiner {
 
 					System.out.println(s);
 					String[] splitMatrix = s.split(" ");
-
+					if (splitMatrix.length != min) {
+						System.out.println(
+								"you need " + splitMatrix.length + " Files in order to recombine the original file !");
+						return;
+					}
 					for (String number : splitMatrix) {
 						listKey.add(Integer.parseInt(number));
 
@@ -109,15 +111,8 @@ public class FileRecombiner {
 
 			// make 2D array from the list
 			arraylist = Ints.toArray(list);
-			System.out.println("Arraylist " + Arrays.toString(arraylist));
-			System.out.println("min " + min);
-			System.out.println("List size " + list.size());
+
 			ccMatrix = Converting.convert1Dto2D(arraylist, min, list.size() / min);
-			// for (int j = 0; j < ccMatrix.length; j++) {
-			// System.out.println("Matrix " + Arrays.toString(ccMatrix[j]) + "L
-			// " + ccMatrix[j].length);
-			//
-			// }
 
 			arrayKeys = Ints.toArray(listKey);
 
@@ -125,12 +120,9 @@ public class FileRecombiner {
 			subAMatrix = Converting.convert1Dto2D(arrayKeys, min, min);
 
 			byte[] fileArray = myFile(ccMatrix, subAMatrix);
-			// System.out.println("fileArray " + Arrays.toString(fileArray) + "L
-			// " + fileArray.length);
 
 			restoreOriginalFile(fileArray, dest);
-
-			CryptoUtils.decrypt(dest, dest);
+			CryptoUtils.decrypt(dest, new File(dest.getAbsolutePath()));
 
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
@@ -173,8 +165,7 @@ public class FileRecombiner {
 	 */
 	public static void restoreOriginalFile(byte[] fileArray, File dest)
 			throws NoSuchAlgorithmException, UnsupportedEncodingException {
-		System.out.println("Bin Da " + Arrays.toString(fileArray));
-
+		System.out.println(Arrays.toString(fileArray));
 		try {
 
 			FileOutputStream fileOuputStream = new FileOutputStream(dest.getAbsolutePath());
@@ -208,10 +199,8 @@ public class FileRecombiner {
 	public static void main(String ar[])
 			throws IOException, NoSuchAlgorithmException, InvalidAlgorithmParameterException, CryptoException {
 
-		recombineMyOriginalFile(3);
-		// String s = "Ich bin da";
-		//
-		// restoreOriginalFile(s.getBytes(), new File("D:/TEST/testen.txt"));
+		recombineMyOriginalFile(2);
+
 	}
 
 }

@@ -79,6 +79,7 @@ public class Converting {
 				dest[row][col] = (double) source[row][col];
 
 			}
+		//	System.out.println(Arrays.deepToString(dest));
 
 		}
 		return dest;
@@ -119,7 +120,7 @@ public class Converting {
 		return bidi;
 	}
 
-	public static double[][] RandomArray(int max, int min) {
+/*	public static double[][] RandomArray(int max, int min) {
 	    double[][] randomMatrix = new double [max][min];
 
 	    Random rand = new Random(); 
@@ -131,14 +132,33 @@ public class Converting {
 	        }
  	    }
 	    
-//		for (int i = 0; i < max; i++) {
-//			for (int j = 0; j < min; j++) {
-//				vandermonde[i][j] = (j == 0 ? 1 : (vandermonde[i][j - 1] * i));
-//				System.out.println(Arrays.toString(vandermonde[i]));
-//
-//			}
-//		}
 
 	    return randomMatrix;
+	}
+	*/
+	
+	
+	public static int mulInGF256(int a, int b) {
+		int p = 0;
+		for (; b != 0; b >>= 1) {
+			p ^= (a * (b & 1));
+			a = ((a >> 7) == 1 ? ((a << 1) ^ 0x1B) : (a << 1)) & 0xFF;
+		}
+		return p;
+	}
+
+	public static int[][] vandermonde(int n, int m) {
+		int[][] mulsInGF256 = new int[256][256];
+		int[][] vandermonde = new int[n][m];
+
+		for (int a = 0; a < 256; a++)
+			for (int b = 0; b < 256; b++)
+				mulsInGF256[a][b] = mulInGF256(a, b);
+		for (int i = 0; i < n; i++) {
+			for (int j = 0; j < m; j++) {
+				vandermonde[i][j] = (j == 0 ? 1 : mulsInGF256[vandermonde[i][j - 1]][i]);
+			}
+		}
+		return vandermonde;
 	}
 }

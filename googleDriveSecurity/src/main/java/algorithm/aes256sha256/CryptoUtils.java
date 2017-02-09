@@ -20,38 +20,67 @@ import javax.crypto.NoSuchPaddingException;
 import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
 
+import org.apache.commons.codec.binary.Base64;
+import org.ejml.simple.SimpleMatrix;
+
+import algorithm.ida.Converting;
+
 /**
- * A utility class that encrypts or decrypts a file. 
+ * A utility class that encrypts or decrypts a file.
+ * 
  * @author www.codejava.net
  *
  */
 public class CryptoUtils {
 	private static final String ALGORITHM = "AES";
 	private static final String TRANSFORMATION = "AES/CBC/PKCS5Padding";
-	
+
 	private static final String ENCRYPTION_KEY = "kkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkk";
 	private static final String ENCRYPTION_IV = "4e5Wa71fYoT7MFEX";
 
-	public static File encrypt(  File inputFile, File outputFile)
+	public static File encrypt(File inputFile, File outputFile)
 			throws CryptoException, InvalidAlgorithmParameterException {
 		try {
-			doCrypto(Cipher.ENCRYPT_MODE,   inputFile, outputFile);
-			 
+			doCrypto(Cipher.ENCRYPT_MODE, inputFile, outputFile);
+
 			return outputFile;
 		} catch (Exception e) {
- 			e.printStackTrace();
+			e.printStackTrace();
 		}
 		return outputFile;
 	}
 
-	public static File  decrypt(  File inputFile, File outputFile)
+	public static String encryptString(String text)
+			throws InvalidKeyException, InvalidAlgorithmParameterException, NoSuchAlgorithmException,
+			UnsupportedEncodingException, NoSuchPaddingException, IllegalBlockSizeException, BadPaddingException {
+
+		Cipher cipher = Cipher.getInstance(TRANSFORMATION);
+		cipher.init(Cipher.ENCRYPT_MODE, makeKey(), makeIv());
+
+		byte[] encryptedBytes = cipher.doFinal(text.getBytes("UTF-8"));
+
+		return Base64.encodeBase64String(encryptedBytes);
+	}
+
+	public static File decrypt(File inputFile, File outputFile)
 			throws CryptoException, InvalidAlgorithmParameterException {
-		doCrypto(Cipher.DECRYPT_MODE,   inputFile, outputFile);
+		doCrypto(Cipher.DECRYPT_MODE, inputFile, outputFile);
 		return outputFile;
 	}
-	
-	
-	
+
+	public static String decryptString(String text)
+			throws java.io.UnsupportedEncodingException, NoSuchAlgorithmException, NoSuchPaddingException,
+			InvalidKeyException, InvalidAlgorithmParameterException, IllegalBlockSizeException, BadPaddingException {
+		byte[] textBytes = Base64.decodeBase64(text);
+
+		Cipher cipher = Cipher.getInstance("AES/CBC/PKCS5Padding");
+		cipher.init(Cipher.DECRYPT_MODE, makeKey(), makeIv());
+
+		byte[] decodedBytes = cipher.doFinal(textBytes);
+
+		return new String(decodedBytes, "UTF-8");
+	}
+
 	static AlgorithmParameterSpec makeIv() {
 		try {
 			return new IvParameterSpec(ENCRYPTION_IV.getBytes("UTF-8"));
@@ -71,34 +100,45 @@ public class CryptoUtils {
 		return new SecretKeySpec(key, ALGORITHM);
 
 	}
-	private static void doCrypto(int cipherMode,  File inputFile,
-			File outputFile) throws CryptoException, InvalidAlgorithmParameterException {
+
+	private static void doCrypto(int cipherMode, File inputFile, File outputFile)
+			throws CryptoException, InvalidAlgorithmParameterException {
 		try {
 			Cipher cipher = Cipher.getInstance(TRANSFORMATION);
 			cipher.init(cipherMode, makeKey(), makeIv());
-			
+
 			FileInputStream inputStream = new FileInputStream(inputFile);
 			byte[] inputBytes = new byte[(int) inputFile.length()];
 			inputStream.read(inputBytes);
-			
+
 			byte[] outputBytes = cipher.doFinal(inputBytes);
-			
+
 			FileOutputStream outputStream = new FileOutputStream(outputFile);
 			outputStream.write(outputBytes);
-		
 
 			inputStream.close();
 			outputStream.close();
-			
-		} catch (NoSuchPaddingException | NoSuchAlgorithmException
-				| InvalidKeyException | BadPaddingException
+
+		} catch (NoSuchPaddingException | NoSuchAlgorithmException | InvalidKeyException | BadPaddingException
 				| IllegalBlockSizeException | IOException ex) {
 			throw new CryptoException("Error encrypting/decrypting file", ex);
 		}
 	}
-	
-	public static void main(String[] args) throws InvalidAlgorithmParameterException, CryptoException{
-	 //	encrypt(new File("D:/testen.txt.encrypted_0.splt"), new File("D:/ENCENCENCENCENC.txt"));
-	 	decrypt(new File("D:/ENCENCENCENCENC.txt"), new File("D:/DECCCCCCCCC.txt"));
+
+
+
+	public static void main(String[] args)
+			throws InvalidAlgorithmParameterException, CryptoException, InvalidKeyException, NoSuchAlgorithmException,
+			UnsupportedEncodingException, NoSuchPaddingException, IllegalBlockSizeException, BadPaddingException {
+		// encrypt(new File("D:/testen.txt.encrypted_0.splt"), new
+		// File("D:/ENCENCENCENCENC.txt"));
+		// System.out.println( encryptString("Ich bin es gewesen !"));
+		// System.out.println(decryptString(encryptString("Ich bin es gewesen
+		// !")));
+	 
+	SimpleMatrix s = new SimpleMatrix(Converting.castingTo2dDoubleFrom2dInt(Converting.vandermonde(6,6))) ;
+	s.print();
+	SimpleMatrix invert = s.invert();
+	invert.print();
 	}
 }
