@@ -141,7 +141,6 @@ public class FileRecombiner {
 	public static byte[] myFile(int[][] array, int[][] subAMatrix) {
 
 		SimpleMatrix inverse = createInverseMatrix(subAMatrix);
-		inverse.print();
 
 		SimpleMatrix ccMatrix = new SimpleMatrix(Converting.castingTo2dDoubleFrom2dInt(array));
 		SimpleMatrix theFileArray = inverse.mult(ccMatrix);
@@ -193,13 +192,14 @@ public class FileRecombiner {
 
 		// create the inverse of A`
 		inverse = aMatrix.invert();
+		inverse.print();
 		return inverse;
 	}
 
 	public static void main(String ar[])
 			throws IOException, NoSuchAlgorithmException, InvalidAlgorithmParameterException, CryptoException {
 
-		recombineMyOriginalFile(2);
+		recombineMyOriginalFile(3);
 
 	}
 

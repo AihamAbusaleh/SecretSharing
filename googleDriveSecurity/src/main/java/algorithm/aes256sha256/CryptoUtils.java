@@ -24,7 +24,7 @@ import org.apache.commons.codec.binary.Base64;
 import org.ejml.simple.SimpleMatrix;
 
 import algorithm.ida.Converting;
-
+ 
 /**
  * A utility class that encrypts or decrypts a file.
  * 
@@ -124,21 +124,5 @@ public class CryptoUtils {
 			throw new CryptoException("Error encrypting/decrypting file", ex);
 		}
 	}
-
-
-
-	public static void main(String[] args)
-			throws InvalidAlgorithmParameterException, CryptoException, InvalidKeyException, NoSuchAlgorithmException,
-			UnsupportedEncodingException, NoSuchPaddingException, IllegalBlockSizeException, BadPaddingException {
-		// encrypt(new File("D:/testen.txt.encrypted_0.splt"), new
-		// File("D:/ENCENCENCENCENC.txt"));
-		// System.out.println( encryptString("Ich bin es gewesen !"));
-		// System.out.println(decryptString(encryptString("Ich bin es gewesen
-		// !")));
-	 
-	SimpleMatrix s = new SimpleMatrix(Converting.castingTo2dDoubleFrom2dInt(Converting.vandermonde(6,6))) ;
-	s.print();
-	SimpleMatrix invert = s.invert();
-	invert.print();
-	}
+ 
 }

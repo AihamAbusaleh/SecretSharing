@@ -129,14 +129,15 @@ public class FileSplitter {
 	 */
 	public static SimpleMatrix createMatrixA(int max, int min) {
 
-		//SimpleMatrix aMatrix = new SimpleMatrix(Converting.RandomArray(max, min));
-		SimpleMatrix aMatrix = new SimpleMatrix(Converting.castingTo2dDoubleFrom2dInt(Converting.vandermonde(max,min))) ;
- 
+	//	SimpleMatrix aMatrix = new SimpleMatrix(Converting.RandomArray(max, min));
+		SimpleMatrix aMatrix = new SimpleMatrix(Converting.castingTo2dDoubleFrom2dInt(Converting.vandermondeMatrixInGF256(max,min))) ;
+		System.out.println("Vandermondeeeeeee");
+		aMatrix.print();
 		return aMatrix;
 	}
 
 	public static void main(String... aArgs) throws Exception {
-		FileSplitter.splitMyOriginalFileIntoSlices(new File("D:/testen.txt"), 6, 2);
+		FileSplitter.splitMyOriginalFileIntoSlices(new File("D:/TESTSplittet/testen.txt"), 6, 3);
 	}
 
 }
