@@ -10,7 +10,7 @@ public class Extension implements FilenameFilter{
 	
 	String extension;
 	
-	Extension(){
+	public Extension(){
 		this.extension=".splt";
 	}
 

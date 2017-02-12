@@ -18,6 +18,9 @@ import com.google.common.primitives.Ints;
 
 import algorithm.aes256sha256.CryptoException;
 import algorithm.aes256sha256.CryptoUtils;
+import classes.GF2N;
+import classes.Matrix;
+import classes.MatrixGF2N;
 
 /**
  * this class is used to recombine the original file from two files(slices.splt)
@@ -27,18 +30,10 @@ import algorithm.aes256sha256.CryptoUtils;
  */
 public class FileRecombiner {
 
-	/**
-	 * recombine original file
-	 * 
-	 * @param slice1
-	 *            the first slice
-	 * @param slice2
-	 *            the secound slice
-	 * @throws UnsupportedEncodingException
-	 * @throws NoSuchAlgorithmException
-	 * @throws CryptoException
-	 * @throws InvalidAlgorithmParameterException
-	 */
+	static long irreduciblePolynomial = 265;
+	static GF2N galoisField = new GF2N(irreduciblePolynomial);
+	static MatrixGF2N matGf = new MatrixGF2N(galoisField);
+
 	public static void recombineMyOriginalFile(int min) throws NoSuchAlgorithmException, UnsupportedEncodingException,
 			InvalidAlgorithmParameterException, CryptoException {
 		File[] allSlices = new File[min];
@@ -48,7 +43,6 @@ public class FileRecombiner {
 
 		List<File> allFile = new ArrayList<File>();
 
-		// gets files with extension 'splt'
 		for (File f : filesInDir) {
 			if (i != min) {
 				allSlices[i] = new File(f.getAbsolutePath());
@@ -58,9 +52,6 @@ public class FileRecombiner {
 			}
 		}
 
-		// split the added extension in the slices and make the new original
-		// file and store it in D:/TEST or in the project directory, here need
-		// to remove D:/TEST
 		int index;
 		index = allSlices[0].getName().lastIndexOf('_');
 		File dest = new File("D:/TEST/" + allSlices[0].getName().substring(0, index - 10));
@@ -82,9 +73,7 @@ public class FileRecombiner {
 				// copy the content of 2 slices into a list
 				while (scan.hasNext()) {
 					String str = scan.nextLine();
-					System.out.println(str);
 					firstPart = str.substring(0, str.indexOf("?") - 1);
-					System.out.println(firstPart);
 
 					String[] splitString = firstPart.split(" ");
 
@@ -95,7 +84,6 @@ public class FileRecombiner {
 					secoundPart = str.substring(firstPart.length() + 2, str.length());
 					String s = secoundPart.replaceAll("\\?", " ");
 
-					System.out.println(s);
 					String[] splitMatrix = s.split(" ");
 					if (splitMatrix.length != min) {
 						System.out.println(
@@ -113,16 +101,20 @@ public class FileRecombiner {
 			arraylist = Ints.toArray(list);
 
 			ccMatrix = Converting.convert1Dto2D(arraylist, min, list.size() / min);
-
+			Matrix sl = new Matrix(Converting.catingTo2dLongFromInt(ccMatrix));
+			Matrix inGF = new Matrix(sl, galoisField.getFieldSize());
+		//	System.out.println("Matrixssss " + inGF);
 			arrayKeys = Ints.toArray(listKey);
 
-			System.out.println("arrayKeys " + Arrays.toString(arrayKeys) + "Length " + arraylist.length);
 			subAMatrix = Converting.convert1Dto2D(arrayKeys, min, min);
-
-			byte[] fileArray = myFile(ccMatrix, subAMatrix);
+			long[][] con = Converting.catingTo2dLongFromInt(subAMatrix);
+			Matrix subGF = new Matrix(con);
+			Matrix subOverGF = new Matrix(subGF, galoisField.getFieldSize());
+		//	System.out.println("Sub A Matrix " + subOverGF);
+			byte[] fileArray = myFile(inGF, subOverGF);
 
 			restoreOriginalFile(fileArray, dest);
-			CryptoUtils.decrypt(dest, new File(dest.getAbsolutePath()));
+		//	CryptoUtils.decrypt(dest, new File(dest.getAbsolutePath()));
 
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
@@ -130,41 +122,21 @@ public class FileRecombiner {
 
 	}
 
-	/**
-	 * 
-	 * @param array
-	 *            the 2D array, that has to be converted to 1D byte array , in
-	 *            order to write it into new File
-	 * @param subAMatrix
-	 * @return the original array (the content of the original file )
-	 */
-	public static byte[] myFile(int[][] array, int[][] subAMatrix) {
+	public static byte[] myFile(Matrix array, Matrix subAMatrix) {
 
-		SimpleMatrix inverse = createInverseMatrix(subAMatrix);
-
-		SimpleMatrix ccMatrix = new SimpleMatrix(Converting.castingTo2dDoubleFrom2dInt(array));
-		SimpleMatrix theFileArray = inverse.mult(ccMatrix);
-		SimpleMatrix transposed = theFileArray.transpose();
-
-		int[] fileArray = Converting.convert2Dto1D(Converting.castingTo2dInt(transposed));
+		Matrix invertedMatrix = matGf.inverse(subAMatrix);
+		System.out.println("inverse " + invertedMatrix);
+		Matrix result = matGf.multiply(invertedMatrix, array);
+		System.out.println("Result " + result);
+		int[] fileArray = Converting.convert2Dto1D(Converting.catingTo2dLongFromInt(result));
 
 		byte[] fileArrayInt = Converting.castingTo1dByte(fileArray);
 
 		return fileArrayInt;
 	}
 
-	/**
-	 * 
-	 * @param fileArray
-	 *            the original array (the content of the original file )
-	 * @param dest
-	 *            create file to write data into it (original File)
-	 * @throws UnsupportedEncodingException
-	 * @throws NoSuchAlgorithmException
-	 */
 	public static void restoreOriginalFile(byte[] fileArray, File dest)
 			throws NoSuchAlgorithmException, UnsupportedEncodingException {
-		System.out.println(Arrays.toString(fileArray));
 		try {
 
 			FileOutputStream fileOuputStream = new FileOutputStream(dest.getAbsolutePath());
@@ -177,29 +149,20 @@ public class FileRecombiner {
 
 	}
 
-	/**
-	 * this is the inverse of A` Matrix (extracted Matrix of A), used to
-	 * recombined the F Matrix, by multiplying it with C`
-	 * 
-	 * @param subAMatrix
-	 * 
-	 * @return inverse Matrix of A
-	 */
-	public static SimpleMatrix createInverseMatrix(int[][] subAMatrix) {
-		// create A Matrix (3x2 Matrix)
-		SimpleMatrix aMatrix = new SimpleMatrix(Converting.castingTo2dDoubleFrom2dInt(subAMatrix));
-		SimpleMatrix inverse = new SimpleMatrix();
-
-		// create the inverse of A`
-		inverse = aMatrix.invert();
-		inverse.print();
-		return inverse;
-	}
+//	public static SimpleMatrix createInverseMatrix(int[][] subAMatrix) {
+//		SimpleMatrix aMatrix = new SimpleMatrix(Converting.castingTo2dDoubleFrom2dInt(subAMatrix));
+//		SimpleMatrix inverse = new SimpleMatrix();
+//
+//		inverse = aMatrix.invert();
+//		inverse.print();
+//	 
+//		return inverse;
+//	}
 
 	public static void main(String ar[])
 			throws IOException, NoSuchAlgorithmException, InvalidAlgorithmParameterException, CryptoException {
 
-		recombineMyOriginalFile(3);
+		recombineMyOriginalFile(4);
 
 	}
 

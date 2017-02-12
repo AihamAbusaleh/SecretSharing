@@ -5,6 +5,8 @@ import java.util.Random;
 
 import org.ejml.simple.SimpleMatrix;
 
+import classes.Matrix;
+
 /**
  * 
  * @author AIN this class used to 1) casting arrays to another types 2) convert
@@ -22,6 +24,42 @@ public class Converting {
 		for (int row = 0; row < source.length; row++) {
 			for (int col = 0; col < source[row].length; col++) {
 				dest[row][col] = (double) source[row][col];
+
+			}
+
+		}
+		return dest;
+	}
+
+	public static long[][] catingTo2dLong(byte[][] source) {
+		long[][] dest = new long[source.length][source[0].length];
+		for (int row = 0; row < source.length; row++) {
+			for (int col = 0; col < source[row].length; col++) {
+				dest[row][col] = (long) source[row][col];
+
+			}
+
+		}
+		return dest;
+	}
+
+	public static long[][] catingTo2dLongFromInt(int[][] source) {
+		long[][] dest = new long[source.length][source[0].length];
+		for (int row = 0; row < source.length; row++) {
+			for (int col = 0; col < source[row].length; col++) {
+				dest[row][col] = (long) source[row][col];
+
+			}
+
+		}
+		return dest;
+	}
+
+	public static int[][] catingTo2dLongFromInt(Matrix source) {
+		int[][] dest = new int[source.getRows()][source.getColumns()];
+		for (int row = 0; row < source.getRows(); row++) {
+			for (int col = 0; col < source.getColumns(); col++) {
+				dest[row][col] = (int) source.getElement(row, col);
 
 			}
 
@@ -66,7 +104,6 @@ public class Converting {
 		return dest;
 	}
 
-	
 	public static byte[][] castingTo2dByte(SimpleMatrix source) {
 		byte[][] dest = new byte[source.numRows()][source.numCols()];
 
@@ -81,6 +118,7 @@ public class Converting {
 		}
 		return dest;
 	}
+
 	/**
 	 * 
 	 * @param source
@@ -94,7 +132,7 @@ public class Converting {
 				dest[row][col] = (double) source[row][col];
 
 			}
-		//	System.out.println(Arrays.deepToString(dest));
+			// System.out.println(Arrays.deepToString(dest));
 
 		}
 		return dest;
@@ -113,6 +151,7 @@ public class Converting {
 			System.arraycopy(array[i], 0, mono, (i * cols), cols);
 		return mono;
 	}
+
 	public static double[] convert2Dto1DDouble(final double[][] array) {
 		int rows = array.length, cols = array[0].length;
 		double[] mono = new double[(rows * cols)];
@@ -138,65 +177,61 @@ public class Converting {
 		int[][] bidi = new int[rows][cols];
 		for (int i = 0; i < rows; i++) {
 			System.arraycopy(array, (i * cols), bidi[i], 0, cols);
- 		}
+		}
 		return bidi;
 	}
 
- 	public static double[][] RandomArray(int max, int min) {
-	    double[][] randomMatrix = new double [max][min];
+	public static double[][] RandomArray(int max, int min) {
+		double[][] randomMatrix = new double[max][min];
 
-	    Random rand = new Random(); 
-	    rand.setSeed(System.currentTimeMillis()); 
-	    for (int i = 0; i < max; i++) {     
-	        for (int j = 0; j < min; j++) {
-	            Integer r = rand.nextInt()% 10; 
-	            randomMatrix[i][j] = Math.abs(r);
-	        }
- 	    }
-	    
-
-	    return randomMatrix;
-	}
-	 
-	 
- 	
- 	
- 	public static int[] converttoIntUnderGF256(byte[] sequence, int m){
- 		
- 		int[] integerSeq;
- 		// convert to integer under GF(256)
-		if (sequence.length % m != 0) {
-			integerSeq = new int[sequence.length + m - sequence.length % m];
-			for (int x = 0; x < integerSeq.length; x++) {
-				
-				if (x < sequence.length)
-					integerSeq[x] = (int) (sequence[x] + 128);
-				else
-					integerSeq[x] = 0;
-			}
-
-		} else {
-			integerSeq = new int[sequence.length + m];
-			for (int x = 0; x < integerSeq.length; x++) {
-				if (x == 0)
-					integerSeq[x] = sequence.length;
-				else if (x < sequence.length + 1 && x > 0)
-					integerSeq[x] = sequence[x - 1];
-				else
-					integerSeq[x] = 0;
+		Random rand = new Random();
+		rand.setSeed(System.currentTimeMillis());
+		for (int i = 0; i < max; i++) {
+			for (int j = 0; j < min; j++) {
+				Integer r = rand.nextInt() % 10;
+				randomMatrix[i][j] = Math.abs(r);
 			}
 		}
-		return integerSeq;
- 	}
- 	
+
+		return randomMatrix;
+	}
+
+	// public static int[] converttoIntUnderGF256(byte[] sequence, int m){
+	//
+	// int[] integerSeq;
+	// // convert to integer under GF(256)
+	// if (sequence.length % m != 0) {
+	// integerSeq = new int[sequence.length + m - sequence.length % m];
+	// for (int x = 0; x < integerSeq.length; x++) {
+	//
+	// if (x < sequence.length)
+	// integerSeq[x] = (int) (sequence[x] + 128);
+	// else
+	// integerSeq[x] = 0;
+	// }
+	//
+	// } else {
+	// integerSeq = new int[sequence.length + m];
+	// for (int x = 0; x < integerSeq.length; x++) {
+	// if (x == 0)
+	// integerSeq[x] = sequence.length;
+	// else if (x < sequence.length + 1 && x > 0)
+	// integerSeq[x] = sequence[x - 1];
+	// else
+	// integerSeq[x] = 0;
+	// }
+	// }
+	// return integerSeq;
+	// }
+
 	private static final int[][] mulsInGF256 = new int[256][256];
 
- 	public static int[][] vandermondeMatrixInGF256(int max, int min) {
- 		// Compute multiplication table
+	public static int[][] vandermondeMatrixInGF256(int max, int min) {
+		// Compute multiplication table
 		for (int a = 0; a < 256; a++)
 			for (int b = 0; b < 256; b++)
 				mulsInGF256[a][b] = mulInGF256(a, b);
-		
+
 		int[][] vandermondeMatrix = new int[max][min];
 		for (int i = 0; i < max; i++) {
 			for (int j = 0; j < min; j++) {
@@ -206,7 +241,7 @@ public class Converting {
 		}
 		return vandermondeMatrix;
 	}
- 	
+
 	// addition in GF(2^8)
 	public static int addInGF256(int a, int b) {
 		return a ^ b;

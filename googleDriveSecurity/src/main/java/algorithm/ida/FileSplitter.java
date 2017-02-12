@@ -7,31 +7,24 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.Arrays;
 
-import org.ejml.simple.SimpleMatrix;
-
+ 
 import algorithm.aes256sha256.CryptoUtils;
+import classes.GF2N;
+import classes.Matrix;
+import classes.MatrixGF2N;
 
 public class FileSplitter {
 
-	/**
-	 * 
-	 * @param min
-	 * @param max
-	 * @param theOrigignalFile
-	 *            to be divided into 2 slices
-	 * 
-	 * @return Matrix F transposed from the original File
-	 * @throws Exception
-	 */
-	public static SimpleMatrix createMatrixF(File encryptedFile, int min) throws Exception {
+	static long irreduciblePolynomial = 265;
+	static GF2N galoisField = new GF2N(irreduciblePolynomial);
+	static MatrixGF2N matGf = new MatrixGF2N(galoisField);
 
+	public static Matrix createMatrixF(File encryptedFile, int min) throws Exception {
+		Matrix originalF = null;
 		byte[] fileF = new byte[(int) encryptedFile.length()];
 		byte[][] matrixF;
-		// in order to work with the ejml library , need a double 2D matrix
-		double[][] matrixFToDouble;
-
-		SimpleMatrix transposedF = new SimpleMatrix();
-		SimpleMatrix fMatrix = new SimpleMatrix();
+		long[][] matrixFToDouble;
+		Matrix transposedF = null;
 
 		if (encryptedFile.length() % min == 0) {
 			matrixF = new byte[(int) fileF.length / min][min];
@@ -45,73 +38,61 @@ public class FileSplitter {
 			input.close();
 
 			int start = 0;
-			// divide the 1D array into 2D array with 2 cols and a number of
-			// rows
+
 			for (int i = 0; i < matrixF.length; i++) {
 				matrixF[i] = Arrays.copyOfRange(fileF, start, start + min);
 				start += min;
 
 			}
-			// in order to use "ejml" library
-			matrixFToDouble = Converting.catingTo2dDouble(matrixF);
-			fMatrix = new SimpleMatrix(matrixFToDouble);
- 			// transpose the matrix F(thefile) to get 2 rows and number of cols
-			transposedF = fMatrix.transpose();
- 		} catch (FileNotFoundException ex) {
+			matrixFToDouble = Converting.catingTo2dLong(matrixF);
+			
+			transposedF = new Matrix(matrixFToDouble);
+
+			transposedF.transpose();
+			System.out.println("BEFORE " +  transposedF);
+			
+			originalF = new Matrix(transposedF, galoisField.getFieldSize());
+	 
+		} catch (FileNotFoundException ex) {
 			System.out.println("the file does not exist");
 		} catch (IOException ex) {
 			System.out.println("cannot read/write from/to a file");
 		}
 
-		return transposedF;
+		return originalF;
 	}
 
-	/**
-	 * this is the method that creates slices from the original file, this
-	 * method is to be invoked in order to split the original file. Each row in
-	 * the C matrix (A*F=C) is a slice, we need just 2 slices in order to
-	 * recombine the original file
-	 * 
-	 * @param source
-	 *            the file to be divided into slices
-	 * @throws Exception
-	 */
-	public static File splitMyOriginalFileIntoSlices(File theOrigignalFile, int max, int min) throws Exception {
+	public static File splitMyOriginalFileIntoSlices(File encryptedFile, int max, int min) throws Exception {
 
-		File newSource = new File(theOrigignalFile.getAbsolutePath() + ".encrypted");
-		File encryptedFile = CryptoUtils.encrypt(theOrigignalFile, newSource);
+	//	File newSource = new File(theOrigignalFile.getAbsolutePath() + ".encrypted");
+	//	File encryptedFile = CryptoUtils.encrypt(theOrigignalFile, newSource);
 
-		SimpleMatrix matrixF = createMatrixF(encryptedFile, min); // F Matrix
-		SimpleMatrix aMatrix = createMatrixA(max, min); // A Matrix
-		SimpleMatrix cMatrix = aMatrix.mult(matrixF); // A * F = C
-		// file from each one
+		Matrix matrixF = createMatrixF(encryptedFile, min); // F Matrix
+		Matrix aMatrix = createMatrixA(max, min);
+		System.out.println("F Matrix  " + matrixF);
+		System.out.println("A Matrix " + aMatrix);
 
-		int[][] ccMAtrixInt = Converting.castingTo2dInt(cMatrix);
-		int[][] aMAtrixInt = Converting.castingTo2dInt(aMatrix);
+		Matrix cMatrix = matGf.multiply(aMatrix, matrixF);
 
-		File[] fileShares = new File[cMatrix.numRows()]; // make all files
- 		try {
-			for (int i = 0; i < cMatrix.numRows(); i++) {
-				// make file with new extensions , ( orginal.txt_0.splt )
+		System.out.println("C Matrix " + cMatrix);
+		File[] fileShares = new File[cMatrix.getRows()]; // make all files
+		try {
+			for (int i = 0; i < cMatrix.getRows(); i++) {
 				fileShares[i] = new File(encryptedFile.getName() + "_" + i + ".splt");
-				// store them in Parent directory or in the project, here need
-				// to remove getParent
-				PrintWriter out = new PrintWriter(theOrigignalFile.getParent() + fileShares[i]);
-				// print the first row to file and the secound row to another
-				// file
-				for (int j = 0; j < cMatrix.numCols(); j++) {
-				//	out.print(CryptoUtils.encryptString(Integer.toString(ccMAtrixInt[i][j])) );
-					out.print(ccMAtrixInt[i][j] + " ");
+
+				PrintWriter out = new PrintWriter(encryptedFile.getParent() + fileShares[i]);
+
+				for (int j = 0; j < cMatrix.getColumns(); j++) {
+
+					out.print(cMatrix.getElement(i, j) + " ");
 
 				}
-				for (int k = 0; k < aMatrix.numCols(); k++) {
-				//	out.print("?" + CryptoUtils.encryptString(Integer.toString(aMAtrixInt[i][k])));
-					out.print("?" + aMAtrixInt[i][k]);
+				for (int k = 0; k < aMatrix.getColumns(); k++) {
+
+					out.print("?" + aMatrix.getElement(i, k));
 				}
-				// CryptoUtils.encrypt(new File(theOrigignalFile.getParent() +
-				// fileShares[i]), new File("D:/TESTTESTETESTETESTE" + i
-				// +".txt"));
- 				out.close();
+
+				out.close();
 			}
 
 		} catch (Exception e) {
@@ -121,23 +102,16 @@ public class FileSplitter {
 
 	}
 
-	/**
-	 * this matrix is used to get the Slices (C Matrix) by multiplying it with F
-	 * Matrix (the orginal file)
-	 * 
-	 * @return A Matrix
-	 */
-	public static SimpleMatrix createMatrixA(int max, int min) {
+	public static Matrix createMatrixA(int max, int min) {
 
-	//	SimpleMatrix aMatrix = new SimpleMatrix(Converting.RandomArray(max, min));
-		SimpleMatrix aMatrix = new SimpleMatrix(Converting.castingTo2dDoubleFrom2dInt(Converting.vandermondeMatrixInGF256(max,min))) ;
-		System.out.println("Vandermondeeeeeee");
-		aMatrix.print();
+		Matrix aMatrix = new Matrix(max, min, galoisField.getFieldSize());
+ 
 		return aMatrix;
 	}
 
 	public static void main(String... aArgs) throws Exception {
-		FileSplitter.splitMyOriginalFileIntoSlices(new File("D:/TESTSplittet/testen.txt"), 6, 3);
+		FileSplitter.splitMyOriginalFileIntoSlices(new File("D:/TEST/testen.txt"), 9, 4);
+
 	}
 
 }
