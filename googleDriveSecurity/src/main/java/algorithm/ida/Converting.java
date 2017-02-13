@@ -6,6 +6,8 @@ import java.util.Random;
 import org.ejml.simple.SimpleMatrix;
 
 import classes.Matrix;
+import exceptions.DimensionMismatchException;
+import exceptions.MathIllegalArgumentException;
 
 /**
  * 
@@ -31,7 +33,18 @@ public class Converting {
 		return dest;
 	}
 
-	public static long[][] catingTo2dLong(byte[][] source) {
+	public static int[][] castingFromByteToInt(byte[][] source) {
+		int[][] dest = new int[source.length][source[0].length];
+		for (int row = 0; row < source.length; row++) {
+			for (int col = 0; col < source[row].length; col++) {
+				dest[row][col] = (int) (source[row][col] & 0xff ); 
+
+			}
+
+		}
+		return dest;
+	}
+	public static long[][] catingTo2dLong(int[][] source) {
 		long[][] dest = new long[source.length][source[0].length];
 		for (int row = 0; row < source.length; row++) {
 			for (int col = 0; col < source[row].length; col++) {
@@ -137,6 +150,20 @@ public class Converting {
 		}
 		return dest;
 	}
+	
+	public static double[][] castingTo2dDoubleFrom2dLong(int[][] is) {
+		double[][] dest = new double[is.length][is[0].length];
+		for (int row = 0; row < is.length; row++) {
+			for (int col = 0; col < is[row].length; col++) {
+				dest[row][col] = (double) is[row][col];
+
+			}
+			// System.out.println(Arrays.deepToString(dest));
+
+		}
+		return dest;
+	}
+
 
 	/**
 	 * 
@@ -181,79 +208,10 @@ public class Converting {
 		return bidi;
 	}
 
-	public static double[][] RandomArray(int max, int min) {
-		double[][] randomMatrix = new double[max][min];
+	 
 
-		Random rand = new Random();
-		rand.setSeed(System.currentTimeMillis());
-		for (int i = 0; i < max; i++) {
-			for (int j = 0; j < min; j++) {
-				Integer r = rand.nextInt() % 10;
-				randomMatrix[i][j] = Math.abs(r);
-			}
-		}
-
-		return randomMatrix;
-	}
-
-	// public static int[] converttoIntUnderGF256(byte[] sequence, int m){
-	//
-	// int[] integerSeq;
-	// // convert to integer under GF(256)
-	// if (sequence.length % m != 0) {
-	// integerSeq = new int[sequence.length + m - sequence.length % m];
-	// for (int x = 0; x < integerSeq.length; x++) {
-	//
-	// if (x < sequence.length)
-	// integerSeq[x] = (int) (sequence[x] + 128);
-	// else
-	// integerSeq[x] = 0;
-	// }
-	//
-	// } else {
-	// integerSeq = new int[sequence.length + m];
-	// for (int x = 0; x < integerSeq.length; x++) {
-	// if (x == 0)
-	// integerSeq[x] = sequence.length;
-	// else if (x < sequence.length + 1 && x > 0)
-	// integerSeq[x] = sequence[x - 1];
-	// else
-	// integerSeq[x] = 0;
-	// }
-	// }
-	// return integerSeq;
-	// }
-
-	private static final int[][] mulsInGF256 = new int[256][256];
-
-	public static int[][] vandermondeMatrixInGF256(int max, int min) {
-		// Compute multiplication table
-		for (int a = 0; a < 256; a++)
-			for (int b = 0; b < 256; b++)
-				mulsInGF256[a][b] = mulInGF256(a, b);
-
-		int[][] vandermondeMatrix = new int[max][min];
-		for (int i = 0; i < max; i++) {
-			for (int j = 0; j < min; j++) {
-				vandermondeMatrix[i][j] = (j == 0 ? 1 : mulsInGF256[vandermondeMatrix[i][j - 1]][i]);
-			}
-
-		}
-		return vandermondeMatrix;
-	}
-
-	// addition in GF(2^8)
-	public static int addInGF256(int a, int b) {
-		return a ^ b;
-	}
-
-	// Multiplication in GF(2^8)
-	public static int mulInGF256(int a, int b) {
-		int p = 0;
-		for (; b != 0; b >>= 1) {
-			p ^= (a * (b & 1));
-			a = ((a >> 7) == 1 ? ((a << 1) ^ 0x1B) : (a << 1)) & 0xFF;
-		}
-		return p;
-	}
+	 
+ 
+ 
+	 
 }

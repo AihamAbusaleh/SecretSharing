@@ -7,8 +7,6 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.Arrays;
 
- 
-import algorithm.aes256sha256.CryptoUtils;
 import classes.GF2N;
 import classes.Matrix;
 import classes.MatrixGF2N;
@@ -35,6 +33,7 @@ public class FileSplitter {
 		try {
 			FileInputStream input = new FileInputStream(encryptedFile);
 			input.read(fileF);
+
 			input.close();
 
 			int start = 0;
@@ -44,15 +43,20 @@ public class FileSplitter {
 				start += min;
 
 			}
-			matrixFToDouble = Converting.catingTo2dLong(matrixF);
-			
+
+			System.out.println("Matrix f  " + Arrays.deepToString(matrixF));
+
+			int[][] fileFinteger = Converting.castingFromByteToInt(matrixF);
+			System.out.println("fileF  " + Arrays.deepToString(fileFinteger));
+
+			matrixFToDouble = Converting.catingTo2dLong(fileFinteger);
+
 			transposedF = new Matrix(matrixFToDouble);
 
 			transposedF.transpose();
-			System.out.println("BEFORE " +  transposedF);
-			
+
 			originalF = new Matrix(transposedF, galoisField.getFieldSize());
-	 
+
 		} catch (FileNotFoundException ex) {
 			System.out.println("the file does not exist");
 		} catch (IOException ex) {
@@ -64,8 +68,10 @@ public class FileSplitter {
 
 	public static File splitMyOriginalFileIntoSlices(File encryptedFile, int max, int min) throws Exception {
 
-	//	File newSource = new File(theOrigignalFile.getAbsolutePath() + ".encrypted");
-	//	File encryptedFile = CryptoUtils.encrypt(theOrigignalFile, newSource);
+		// File newSource = new File(theOrigignalFile.getAbsolutePath() +
+		// ".encrypted");
+		// File encryptedFile = CryptoUtils.encrypt(theOrigignalFile,
+		// newSource);
 
 		Matrix matrixF = createMatrixF(encryptedFile, min); // F Matrix
 		Matrix aMatrix = createMatrixA(max, min);
@@ -73,7 +79,7 @@ public class FileSplitter {
 		System.out.println("A Matrix " + aMatrix);
 
 		Matrix cMatrix = matGf.multiply(aMatrix, matrixF);
-
+		// Matrix cMatrix = Converting.multiplyyyyy(aMatrix, matrixF);
 		System.out.println("C Matrix " + cMatrix);
 		File[] fileShares = new File[cMatrix.getRows()]; // make all files
 		try {
@@ -105,12 +111,12 @@ public class FileSplitter {
 	public static Matrix createMatrixA(int max, int min) {
 
 		Matrix aMatrix = new Matrix(max, min, galoisField.getFieldSize());
- 
+
 		return aMatrix;
 	}
 
 	public static void main(String... aArgs) throws Exception {
-		FileSplitter.splitMyOriginalFileIntoSlices(new File("D:/TEST/testen.txt"), 9, 4);
+		FileSplitter.splitMyOriginalFileIntoSlices(new File("D:/TEST/testen.txt"), 5, 3);
 
 	}
 

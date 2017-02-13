@@ -54,7 +54,7 @@ public class FileRecombiner {
 
 		int index;
 		index = allSlices[0].getName().lastIndexOf('_');
-		File dest = new File("D:/TEST/" + allSlices[0].getName().substring(0, index - 10));
+		File dest = new File("D:/TEST/" + allSlices[0].getName().substring(0, index ));
 		List<Integer> list = new ArrayList<Integer>();
 		List<Integer> listKey = new ArrayList<Integer>();
 
@@ -126,13 +126,13 @@ public class FileRecombiner {
 
 		Matrix invertedMatrix = matGf.inverse(subAMatrix);
 		System.out.println("inverse " + invertedMatrix);
-		Matrix result = matGf.multiply(invertedMatrix, array);
-		System.out.println("Result " + result);
-		int[] fileArray = Converting.convert2Dto1D(Converting.catingTo2dLongFromInt(result));
+	 	Matrix result = matGf.multiply(invertedMatrix, array);
+	 	result.transpose();
+ 		int[] fileArray = Converting.convert2Dto1D(Converting.catingTo2dLongFromInt(result));
 
 		byte[] fileArrayInt = Converting.castingTo1dByte(fileArray);
-
-		return fileArrayInt;
+		System.out.println("Result " + Arrays.toString(fileArrayInt));
+ 		return fileArrayInt;
 	}
 
 	public static void restoreOriginalFile(byte[] fileArray, File dest)
@@ -148,21 +148,12 @@ public class FileRecombiner {
 		}
 
 	}
-
-//	public static SimpleMatrix createInverseMatrix(int[][] subAMatrix) {
-//		SimpleMatrix aMatrix = new SimpleMatrix(Converting.castingTo2dDoubleFrom2dInt(subAMatrix));
-//		SimpleMatrix inverse = new SimpleMatrix();
-//
-//		inverse = aMatrix.invert();
-//		inverse.print();
-//	 
-//		return inverse;
-//	}
+ 
 
 	public static void main(String ar[])
 			throws IOException, NoSuchAlgorithmException, InvalidAlgorithmParameterException, CryptoException {
 
-		recombineMyOriginalFile(4);
+		recombineMyOriginalFile(3);
 
 	}
 
