@@ -1,13 +1,14 @@
 package algorithm.ida;
 
+import java.io.File;
 import java.util.Arrays;
 import java.util.Random;
 
 import org.ejml.simple.SimpleMatrix;
 
-import classes.Matrix;
-import exceptions.DimensionMismatchException;
-import exceptions.MathIllegalArgumentException;
+import finiteFieldLibrary.Matrix;
+
+ 
 
 /**
  * 
@@ -209,7 +210,9 @@ public class Converting {
 	}
 
 	 
-
+public static void main(String[] args) throws Exception{
+//as	FileSplitter.splitMyOriginalFileIntoSlices(new File("D:/TEST/testen.txt"), 4, 2);
+}
 	 
  
  

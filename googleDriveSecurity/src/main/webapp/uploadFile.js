@@ -4,7 +4,7 @@ var iPreviousBytesLoaded = 0;
 var iMaxFilesize = 1048576999; // 1MB
 var oTimer = 0;
 var sResultFileSize = '';
-
+ 
 function secondsToTime(secs) { // we will use this function to convert seconds in normal time format
     var hr = Math.floor(secs / 3600);
     var min = Math.floor((secs - (hr * 3600))/60);
@@ -99,7 +99,7 @@ function startUploading() {
     oXHR.addEventListener('load', uploadFinish, false);
     oXHR.addEventListener('error', uploadError, false);
     oXHR.addEventListener('abort', uploadAbort, false);
-    oXHR.open('POST', 'http://localhost:8016/googleDriveSecurity/webapi/myresource/upload');
+  //  oXHR.open('POST', 'http://localhost:8016/googleDriveSecurity/webapi/myresource/split');
     oXHR.send(vFD);
 
     // set inner timer
@@ -173,3 +173,35 @@ function uploadAbort(e) { // upload abort
     document.getElementById('abort').style.display = 'block';
     clearInterval(oTimer);
 }
+
+function MinimumNValidate(){
+    var min = parseInt(document.getElementById("min").value);
+    var max = parseInt(document.getElementById("max").value);
+    if(min > max) {
+        alert("Minimum value must be lesser than maximum value. " + min + " > " + max );
+    } 
+    
+}    
+
+ function MaximumNValidate(){
+    var min = parseInt(document.getElementById("min").value);
+    var max = parseInt(document.getElementById("max").value);
+    if(max<min) {
+        alert("Maximum value must be greater than minimum value."  + min + " > " + max );
+    } 
+}
+ 
+ $(document).ready(function() {
+	 $(function(){
+		    $('#submit').attr('disabled', 'disabled');
+		    $('input').change(buttonState);
+		})
+		});
+
+ function buttonState(){
+	    $("input").each(function(){
+	        $('#submit').attr('disabled', 'disabled');
+	        if($(this).val() == "" ) return false;
+	        $('#submit').attr('disabled', '');
+	    })
+	}

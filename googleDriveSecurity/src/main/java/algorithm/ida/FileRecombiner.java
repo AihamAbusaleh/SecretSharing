@@ -18,10 +18,10 @@ import com.google.common.primitives.Ints;
 
 import algorithm.aes256sha256.CryptoException;
 import algorithm.aes256sha256.CryptoUtils;
-import classes.GF2N;
-import classes.Matrix;
-import classes.MatrixGF2N;
-
+import finiteFieldLibrary.GF2N;
+import finiteFieldLibrary.Matrix;
+import finiteFieldLibrary.MatrixGF2N;
+ 
 /**
  * this class is used to recombine the original file from two files(slices.splt)
  * 
@@ -34,27 +34,42 @@ public class FileRecombiner {
 	static GF2N galoisField = new GF2N(irreduciblePolynomial);
 	static MatrixGF2N matGf = new MatrixGF2N(galoisField);
 
-	public static void recombineMyOriginalFile(int min) throws NoSuchAlgorithmException, UnsupportedEncodingException,
-			InvalidAlgorithmParameterException, CryptoException {
-		File[] allSlices = new File[min];
+	public static File[] returnEncryptedFiles(int min) throws InvalidAlgorithmParameterException, CryptoException {
+ 
 		File dir = new File("D:/");
 		File[] filesInDir = dir.listFiles(new Extension());
 		int i = 0;
-
-		List<File> allFile = new ArrayList<File>();
-
+		
 		for (File f : filesInDir) {
+			File dec = null;
 			if (i != min) {
-				allSlices[i] = new File(f.getAbsolutePath());
+			  dec = 	CryptoUtils.decrypt(f, f); // has to dec 2 times when it was downloaded from google ^^ otherwise one time 
+			  dec = 	CryptoUtils.decrypt(f, f);
+ 				filesInDir[i] = dec;
 
-				allFile.add(allSlices[i]);
 				i++;
 			}
+
 		}
 
+		return filesInDir;
+
+	}
+
+	public static void recombineMyOriginalFile(int min) throws NoSuchAlgorithmException, UnsupportedEncodingException,
+			InvalidAlgorithmParameterException, CryptoException {
+
+		File[] filesInDir = returnEncryptedFiles(min);
 		int index;
-		index = allSlices[0].getName().lastIndexOf('_');
-		File dest = new File("D:/TEST/" + allSlices[0].getName().substring(0, index ));
+
+		index = filesInDir[0].getName().lastIndexOf('_');
+		File dest = new File("D:/" + filesInDir[0].getName().substring(0, index));
+		List<File> allFile = new ArrayList<File>();
+
+		for (File file : filesInDir) {
+			allFile.add(file);
+		}
+
 		List<Integer> list = new ArrayList<Integer>();
 		List<Integer> listKey = new ArrayList<Integer>();
 
@@ -103,18 +118,18 @@ public class FileRecombiner {
 			ccMatrix = Converting.convert1Dto2D(arraylist, min, list.size() / min);
 			Matrix sl = new Matrix(Converting.catingTo2dLongFromInt(ccMatrix));
 			Matrix inGF = new Matrix(sl, galoisField.getFieldSize());
-		//	System.out.println("Matrixssss " + inGF);
+			// System.out.println("Matrixssss " + inGF);
 			arrayKeys = Ints.toArray(listKey);
 
 			subAMatrix = Converting.convert1Dto2D(arrayKeys, min, min);
 			long[][] con = Converting.catingTo2dLongFromInt(subAMatrix);
 			Matrix subGF = new Matrix(con);
 			Matrix subOverGF = new Matrix(subGF, galoisField.getFieldSize());
-		//	System.out.println("Sub A Matrix " + subOverGF);
+			// System.out.println("Sub A Matrix " + subOverGF);
 			byte[] fileArray = myFile(inGF, subOverGF);
 
 			restoreOriginalFile(fileArray, dest);
-		//	CryptoUtils.decrypt(dest, new File(dest.getAbsolutePath()));
+			// CryptoUtils.decrypt(dest, new File(dest.getAbsolutePath()));
 
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
@@ -126,13 +141,13 @@ public class FileRecombiner {
 
 		Matrix invertedMatrix = matGf.inverse(subAMatrix);
 		System.out.println("inverse " + invertedMatrix);
-	 	Matrix result = matGf.multiply(invertedMatrix, array);
-	 	result.transpose();
- 		int[] fileArray = Converting.convert2Dto1D(Converting.catingTo2dLongFromInt(result));
+		Matrix result = matGf.multiply(invertedMatrix, array);
+		result.transpose();
+		int[] fileArray = Converting.convert2Dto1D(Converting.catingTo2dLongFromInt(result));
 
 		byte[] fileArrayInt = Converting.castingTo1dByte(fileArray);
 		System.out.println("Result " + Arrays.toString(fileArrayInt));
- 		return fileArrayInt;
+		return fileArrayInt;
 	}
 
 	public static void restoreOriginalFile(byte[] fileArray, File dest)
@@ -148,13 +163,12 @@ public class FileRecombiner {
 		}
 
 	}
- 
 
 	public static void main(String ar[])
 			throws IOException, NoSuchAlgorithmException, InvalidAlgorithmParameterException, CryptoException {
 
-		recombineMyOriginalFile(3);
-
+	 	recombineMyOriginalFile(2);
+	//	CryptoUtils.decrypt(new File("D:/testen.txt_3.splt.encsss"), new File("D:/testen.txt_3.splt.decdecdec"));
 	}
 
 }

@@ -7,9 +7,10 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.Arrays;
 
-import classes.GF2N;
-import classes.Matrix;
-import classes.MatrixGF2N;
+import finiteFieldLibrary.GF2N;
+import finiteFieldLibrary.Matrix;
+import finiteFieldLibrary.MatrixGF2N;
+ 
 
 public class FileSplitter {
 
@@ -44,10 +45,7 @@ public class FileSplitter {
 
 			}
 
-			System.out.println("Matrix f  " + Arrays.deepToString(matrixF));
-
 			int[][] fileFinteger = Converting.castingFromByteToInt(matrixF);
-			System.out.println("fileF  " + Arrays.deepToString(fileFinteger));
 
 			matrixFToDouble = Converting.catingTo2dLong(fileFinteger);
 
@@ -66,28 +64,19 @@ public class FileSplitter {
 		return originalF;
 	}
 
-	public static File splitMyOriginalFileIntoSlices(File encryptedFile, int max, int min) throws Exception {
+	public static void splitMyOriginalFileIntoSlices(File encryptedFile, int max, int min) throws Exception {
 
-		// File newSource = new File(theOrigignalFile.getAbsolutePath() +
-		// ".encrypted");
-		// File encryptedFile = CryptoUtils.encrypt(theOrigignalFile,
-		// newSource);
-
-		Matrix matrixF = createMatrixF(encryptedFile, min); // F Matrix
+	 
+ 		Matrix matrixF = createMatrixF(encryptedFile, min); // F Matrix
 		Matrix aMatrix = createMatrixA(max, min);
-		System.out.println("F Matrix  " + matrixF);
-		System.out.println("A Matrix " + aMatrix);
 
-		Matrix cMatrix = matGf.multiply(aMatrix, matrixF);
-		// Matrix cMatrix = Converting.multiplyyyyy(aMatrix, matrixF);
-		System.out.println("C Matrix " + cMatrix);
+ 		Matrix cMatrix = matGf.multiply(aMatrix, matrixF);
 		File[] fileShares = new File[cMatrix.getRows()]; // make all files
 		try {
 			for (int i = 0; i < cMatrix.getRows(); i++) {
-				fileShares[i] = new File(encryptedFile.getName() + "_" + i + ".splt");
-
-				PrintWriter out = new PrintWriter(encryptedFile.getParent() + fileShares[i]);
-
+				fileShares[i] = new File("_" + i + ".splt");
+				PrintWriter out = new PrintWriter(encryptedFile.getAbsolutePath() + fileShares[i].getName());
+ 
 				for (int j = 0; j < cMatrix.getColumns(); j++) {
 
 					out.print(cMatrix.getElement(i, j) + " ");
@@ -97,15 +86,15 @@ public class FileSplitter {
 
 					out.print("?" + aMatrix.getElement(i, k));
 				}
-
+				out.flush();
 				out.close();
+	 
 			}
 
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		return fileShares[0];
-
+  
 	}
 
 	public static Matrix createMatrixA(int max, int min) {
@@ -115,9 +104,9 @@ public class FileSplitter {
 		return aMatrix;
 	}
 
-	public static void main(String... aArgs) throws Exception {
-		FileSplitter.splitMyOriginalFileIntoSlices(new File("D:/TEST/testen.txt"), 5, 3);
-
-	}
+//	public static void main(String... aArgs) throws Exception {
+//		FileSplitter.splitMyOriginalFileIntoSlices(new File("D:/TEST/testen.txt"), 4, 2);
+//
+//	}
 
 }

@@ -1,6 +1,7 @@
 package driveRESTful;
 
  
+import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -39,6 +40,18 @@ public class MyResource {
 		return "Got it!";
 	}
 
+	
+	@POST
+	@Path("/split")
+	@Consumes(MediaType.MULTIPART_FORM_DATA)
+	public void split(@FormDataParam("file") java.io.File file,
+			@FormDataParam("file") FormDataContentDisposition fileDetail,
+			@FormDataParam("max") int max,
+			@FormDataParam("min") int min ) throws Exception{
+		System.out.println(fileDetail.getFileName());
+ 		FileSplitter.splitMyOriginalFileIntoSlices(new File("D:/" + fileDetail.getFileName()), max, min);
+ 		
+	}
 	@POST
 	@Path("/upload")
 	@Consumes(MediaType.MULTIPART_FORM_DATA)

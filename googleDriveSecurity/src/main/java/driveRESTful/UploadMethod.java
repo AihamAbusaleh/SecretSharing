@@ -8,6 +8,7 @@ import com.google.api.services.drive.Drive;
 import com.google.api.services.drive.model.File;
 import com.google.api.services.drive.model.ParentReference;
 
+import algorithm.aes256sha256.CryptoUtils;
 import algorithm.ida.FileSplitter;
 
 public class UploadMethod {
@@ -18,13 +19,16 @@ public class UploadMethod {
 	// java.io.File(UPLOAD_FILE_PATH);
 
 	public static final java.io.File DATA_STORE_DIR = new java.io.File(System.getProperty("user.home"),
-			".store/restfulApiii");
+			".store/restfulA");
 
 	public static File uploadFile(boolean useDirectUpload, String myFile  ) throws Exception {
 	//	String parentId = "0B2A16ATWN2_Wfm50bk1INlFBUW9hNk1QM3VRclJqY0Q4OUNPY2EtS1k5eHdVMlZkVFpwZFk";
-		java.io.File ORIGINAL_FILE = new java.io.File("D:/" +  myFile);
-		java.io.File getEncFile = FileSplitter.splitMyOriginalFileIntoSlices(ORIGINAL_FILE, 6, 3);
-		java.io.File DECRYPTED_FILE = new java.io.File(ORIGINAL_FILE.getParent() + getEncFile); 
+		java.io.File ORIGINAL_FILE = new java.io.File("D:/TEST/" +  myFile);
+		System.out.println(ORIGINAL_FILE.getAbsolutePath());
+	//	java.io.File getEncFile = FileSplitter.splitMyOriginalFileIntoSlices(ORIGINAL_FILE, 6, 3);
+		java.io.File getEncFile = CryptoUtils.encrypt(ORIGINAL_FILE, ORIGINAL_FILE);
+		System.out.println(getEncFile.getAbsolutePath());
+		java.io.File DECRYPTED_FILE = new java.io.File(  getEncFile.getAbsolutePath()); 
   		File fileMetadata = new File();
 		fileMetadata.setTitle(DECRYPTED_FILE.getName());
 		
