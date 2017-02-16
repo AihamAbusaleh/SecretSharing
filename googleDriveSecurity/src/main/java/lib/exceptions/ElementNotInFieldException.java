@@ -1,4 +1,4 @@
-package exceptions;
+package lib.exceptions;
 
 /**
  * ElementNotInFieldException is thrown to indicate, that a method has been 

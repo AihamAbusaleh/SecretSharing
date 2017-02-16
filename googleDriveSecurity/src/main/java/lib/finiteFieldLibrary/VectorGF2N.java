@@ -1,7 +1,7 @@
-package finiteFieldLibrary;
+package lib.finiteFieldLibrary;
 
-import exceptions.DimensionMismatchException;
-import interfaces.GaloisFieldVectorArithmetic;
+import lib.exceptions.DimensionMismatchException;
+import lib.interfaces.GaloisFieldVectorArithmetic;
 
 /**
  * Class VectorGF2N implements interface GaloisFieldVectorArithmetic for

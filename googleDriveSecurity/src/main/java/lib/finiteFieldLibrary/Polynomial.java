@@ -1,4 +1,4 @@
-package finiteFieldLibrary;
+package lib.finiteFieldLibrary;
 
 import java.util.Arrays;
 import java.util.Random;

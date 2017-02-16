@@ -1,8 +1,8 @@
-package interfaces;
+package lib.interfaces;
 
  
-import finiteFieldLibrary.Matrix;
-import finiteFieldLibrary.Vector;
+import lib.finiteFieldLibrary.Matrix;
+import lib.finiteFieldLibrary.Vector;
 
 /**
  * Interface GaloisFieldMatrixArithmetic describes basic operations for

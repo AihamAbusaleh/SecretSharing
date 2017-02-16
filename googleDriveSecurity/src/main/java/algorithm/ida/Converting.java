@@ -6,7 +6,7 @@ import java.util.Random;
 
 import org.ejml.simple.SimpleMatrix;
 
-import finiteFieldLibrary.Matrix;
+import lib.finiteFieldLibrary.Matrix;
 
  
 

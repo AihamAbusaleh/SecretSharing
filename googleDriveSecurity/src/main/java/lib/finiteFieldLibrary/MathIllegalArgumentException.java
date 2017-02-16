@@ -1,4 +1,4 @@
-package exceptions;
+package lib.finiteFieldLibrary;
 
 /**
  * MathIllegalArgumentException is superclass of all exceptions thrown by

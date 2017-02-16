@@ -1,12 +1,12 @@
-package finiteFieldLibrary;
+package lib.finiteFieldLibrary;
 
 
 import java.util.HashSet;
 
-import exceptions.DimensionMismatchException;
-import exceptions.MathArithmeticException;
-import exceptions.MathIllegalArgumentException;
-import interfaces.GaloisFieldMatrixArithmetic;
+import lib.exceptions.DimensionMismatchException;
+import lib.exceptions.MathArithmeticException;
+import lib.exceptions.MathIllegalArgumentException;
+import lib.interfaces.GaloisFieldMatrixArithmetic;
  
 
 /**

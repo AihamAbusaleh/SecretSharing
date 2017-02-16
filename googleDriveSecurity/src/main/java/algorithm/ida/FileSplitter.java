@@ -7,9 +7,9 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.Arrays;
 
-import finiteFieldLibrary.GF2N;
-import finiteFieldLibrary.Matrix;
-import finiteFieldLibrary.MatrixGF2N;
+import lib.finiteFieldLibrary.GF2N;
+import lib.finiteFieldLibrary.Matrix;
+import lib.finiteFieldLibrary.MatrixGF2N;
  
 
 public class FileSplitter {

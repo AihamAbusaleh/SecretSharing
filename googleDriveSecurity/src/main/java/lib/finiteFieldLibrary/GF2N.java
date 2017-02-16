@@ -1,13 +1,13 @@
-package finiteFieldLibrary;
+package lib.finiteFieldLibrary;
 
  
 
 import java.util.ArrayList;
 
-import exceptions.ElementNotInFieldException;
-import exceptions.MathArithmeticException;
-import exceptions.MathIllegalArgumentException;
-import interfaces.GaloisFieldArithmetic;
+import lib.exceptions.ElementNotInFieldException;
+import lib.exceptions.MathArithmeticException;
+import lib.exceptions.MathIllegalArgumentException;
+import lib.interfaces.GaloisFieldArithmetic;
  
 
 /**

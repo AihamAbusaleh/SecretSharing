@@ -18,9 +18,9 @@ import com.google.common.primitives.Ints;
 
 import algorithm.aes256sha256.CryptoException;
 import algorithm.aes256sha256.CryptoUtils;
-import finiteFieldLibrary.GF2N;
-import finiteFieldLibrary.Matrix;
-import finiteFieldLibrary.MatrixGF2N;
+import lib.finiteFieldLibrary.GF2N;
+import lib.finiteFieldLibrary.Matrix;
+import lib.finiteFieldLibrary.MatrixGF2N;
  
 /**
  * this class is used to recombine the original file from two files(slices.splt)

@@ -1,6 +1,6 @@
-package interfaces;
+package lib.interfaces;
 
-import finiteFieldLibrary.Vector;
+import lib.finiteFieldLibrary.Vector;
 
 /**
  * Interface GaloisFieldVectorArithmetic describes basic operations for

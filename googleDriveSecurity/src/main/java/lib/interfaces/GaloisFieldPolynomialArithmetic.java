@@ -1,6 +1,6 @@
-package interfaces;
+package lib.interfaces;
 
-import finiteFieldLibrary.Polynomial;
+import lib.finiteFieldLibrary.Polynomial;
 
 /**
  * Interface GaloisFieldPolynomialArithmetic describes basic operations for

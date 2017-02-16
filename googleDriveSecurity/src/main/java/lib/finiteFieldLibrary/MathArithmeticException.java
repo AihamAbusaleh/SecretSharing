@@ -1,4 +1,4 @@
-package exceptions;
+package lib.finiteFieldLibrary;
 
 /**
  * MathArithmeticException is thrown to indicate, that operation has no
