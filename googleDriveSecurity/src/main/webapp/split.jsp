@@ -42,7 +42,7 @@
             <div class="upload_form_cont">
                 <form    id="upload_form" enctype="multipart/form-data" method="post" action="http://localhost:8016/SecretSharing/webapi/myresource/split">
                     <div>
-                         <div>File to splitt: <input type="file" name="file" id="image_file" onchange="fileSelected();"  required /></div>
+                         <div>File to split: <input type="file" name="file" id="image_file" onchange="fileSelected();"  required /></div>
                          <div>Max Slices : <input type="text" name="max" id="max" onchange="MaximumNValidate();" required /></div>
                           <div>Min Slices for Recombine: <input type="text" name="min" id="min" onchange="MinimumNValidate();"  required /></div>
                     </div>

@@ -67,11 +67,7 @@
   <artifactId>google-api-client-servlet</artifactId>
   <version>1.20.0</version>
 </dependency>
-  <dependency>
-        <groupId>org.glassfish.jersey.media</groupId>
-        <artifactId>jersey-media-multipart</artifactId>
-         <type>jar</type>
-    </dependency>
+ 
 <dependency>
   <groupId>com.google.api-client</groupId>
   <artifactId>google-api-client</artifactId>
