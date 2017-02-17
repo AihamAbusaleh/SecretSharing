@@ -14,7 +14,7 @@ body {
 }
 #upload_form {
     float:left;
-    padding:20px;
+    padding:50px;
     width:700px;
 }
 #preview {
@@ -25,7 +25,7 @@ body {
     width:200px;
 }
 #upload_form > div {
-    margin-bottom:10px;
+    margin-bottom:20px;
 }
 #speed,#remaining {
     float:left;
@@ -60,7 +60,7 @@ input[type=submit] {
     background: linear-gradient(#ffffff, #dfdfdf);
 }
 #image_file {
-    width:600px;
+    width:400px;
 }
 #progress_info {
     font-size:20pt;

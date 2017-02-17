@@ -27,6 +27,7 @@ import algorithm.ida.FileSplitter;
  */
 @Path("myresource")
 public class MyResource {
+	  static final String UPLOAD_FILE_PATH = "D:/TEST/";
 
 	/**
 	 * Method handling HTTP GET requests. The returned object will be sent to
@@ -49,7 +50,8 @@ public class MyResource {
 			@FormDataParam("max") int max,
 			@FormDataParam("min") int min ) throws Exception{
 		System.out.println(fileDetail.getFileName());
- 		FileSplitter.splitMyOriginalFileIntoSlices(new File("D:/" + fileDetail.getFileName()), max, min);
+ 		FileSplitter.splitMyOriginalFileIntoSlices(new File(UPLOAD_FILE_PATH + fileDetail.getFileName()), max, min);
+ 
  		
 	}
 	@POST

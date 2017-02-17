@@ -3,14 +3,14 @@
 
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>RESTfulDriveSecurity</groupId>
-    <artifactId>googleDriveSecurity</artifactId>
+    <groupId>RESTfulApis</groupId>
+    <artifactId>SecretSharing</artifactId>
     <packaging>war</packaging>
     <version>0.0.1-SNAPSHOT</version>
-    <name>googleDriveSecurity</name>
+    <name>SecretSharing</name>
 
     <build>
-        <finalName>googleDriveSecurity</finalName>
+        <finalName>SecretSharing</finalName>
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>

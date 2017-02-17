@@ -40,10 +40,10 @@
   
 			
             <div class="upload_form_cont">
-                <form id="upload_form" enctype="multipart/form-data" method="post" action="http://localhost:8016/googleDriveSecurity/webapi/myresource/upload">
+                <form id="upload_form" enctype="multipart/form-data" method="post" action="http://localhost:8016/SecretSharing/webapi/myresource/upload">
                     <div>
-                        <div><label for="image_file">Please select a file</label></div>
-                        <div><input type="file" name="file" id="image_file" onchange="fileSelected();" /></div>
+                         
+                        <div>Select File : <input type="file" name="file" id="image_file" onchange="fileSelected();" /></div>
                     </div>
                     <div>
                         <input type="button" value="Upload"    onclick="startUploading()"  /><br>
