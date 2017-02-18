@@ -1,10 +1,12 @@
-package driveRESTful;
+package restful.GDrive;
 
- 
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
@@ -12,7 +14,10 @@ import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
+
+import org.glassfish.jersey.media.multipart.FormDataBodyPart;
 import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
+import org.glassfish.jersey.media.multipart.FormDataMultiPart;
 import org.glassfish.jersey.media.multipart.FormDataParam;
 
 import com.google.api.client.auth.oauth2.Credential;
@@ -20,48 +25,28 @@ import com.google.api.client.googleapis.javanet.GoogleNetHttpTransport;
 import com.google.api.client.util.store.FileDataStoreFactory;
 import com.google.api.services.drive.Drive;
 
-import algorithm.ida.FileSplitter;
+import algorithms.IDA.FileSplitter;
 
 /**
  * Root resource (exposed at "myresource" path)
  */
-@Path("myresource")
-public class MyResource {
-	  static final String UPLOAD_FILE_PATH = "D:/TEST/";
+@Path("myresourceGoogleDrive")
+public class MyResourceGoogleDrive {
+	static final String UPLOAD_FILE_PATH = "D:/TEST/";
 
-	/**
-	 * Method handling HTTP GET requests. The returned object will be sent to
-	 * the client as "text/plain" media type.
-	 *
-	 * @return String that will be returned as a text/plain response.
-	 */
-	@GET
-	@Produces(MediaType.TEXT_PLAIN)
-	public String getIt() {
-		return "Got it!";
-	}
-
-	
-	@POST
-	@Path("/split")
-	@Consumes(MediaType.MULTIPART_FORM_DATA)
-	public void split(@FormDataParam("file") java.io.File file,
-			@FormDataParam("file") FormDataContentDisposition fileDetail,
-			@FormDataParam("max") int max,
-			@FormDataParam("min") int min ) throws Exception{
-		System.out.println(fileDetail.getFileName());
- 		FileSplitter.splitMyOriginalFileIntoSlices(new File(UPLOAD_FILE_PATH + fileDetail.getFileName()), max, min);
  
- 		
-	}
+
+	 
+
 	@POST
-	@Path("/upload")
+	@Path("/uploadToDrive")
 	@Consumes(MediaType.MULTIPART_FORM_DATA)
-	public String upload(@FormDataParam("file") java.io.File file,
-						@FormDataParam("file") FormDataContentDisposition fileDetail) throws MalformedURLException {
-		
-		
- 		try {
+	public String upload(FormDataMultiPart files)
+			throws MalformedURLException {
+		// @FormDataParam("file") FormDataContentDisposition fileDetail
+		List<FormDataBodyPart> fields = files.getFields("file");
+
+		try {
 			Auth.httpTransport = GoogleNetHttpTransport.newTrustedTransport();
 			Auth.dataStoreFactory = new FileDataStoreFactory(UploadMethod.DATA_STORE_DIR);
 			// authorization
@@ -69,18 +54,18 @@ public class MyResource {
 			// set up the global Drive instance
 			UploadMethod.drive = new Drive.Builder(Auth.httpTransport, Auth.JSON_FACTORY, credential)
 					.setApplicationName(UploadMethod.APPLICATION_NAME).build();
- 			
-		
-			  UploadMethod.uploadFile(true, (  fileDetail.getFileName()));
+			for (FormDataBodyPart f : fields) {
+				UploadMethod.uploadFile(true, f.getFormDataContentDisposition().getFileName());
+			}
 
-			  return "The File was seccsesfully uploaded .....";
+			return  fields.size() + " Files were seccsesfully uploaded .....";
 		} catch (IOException e) {
 			System.err.println(e.getMessage());
 		} catch (Throwable t) {
 			t.printStackTrace();
 		}
 		System.exit(1);
-		return "Faild to upload the File. .. .";
+		return "Faild to upload the Files. .. .";
 
 	}
 

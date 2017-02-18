@@ -7,15 +7,14 @@
 
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
-<title>Split File </title>
+<title>Upload File to Google Drive</title>
  
 <link type="text/css" rel="stylesheet"  href="JS-CSS/style.css" />
  
 </head>
 <body>
- 
- 
- 	<br>
+
+   
 	
 	<script src="JS-CSS/uploadFile.js"></script>
 	
@@ -25,14 +24,13 @@
   
 			
             <div class="upload_form_cont">
-                <form    id="upload_form" enctype="multipart/form-data" method="post" action="http://localhost:8016/SecretSharing/webapi/myresourceSplit/split">
+                <form id="upload_form" enctype="multipart/form-data" method="post" action="http://localhost:8016/SecretSharing/webapi/myresourceDropbox/uploadToDropbox">
                     <div>
-                         <div>File to split: <input type="file" name="file" id="image_file" onchange="fileSelected();"  required /></div>
-                         <div>Max Slices : <input type="text" name="max" id="max" onchange="MaximumNValidate();" required /></div>
-                          <div>Min Slices for Recombine: <input type="text" name="min" id="min" onchange="MinimumNValidate();"  required /></div>
+                         
+                        <div>Select File : <input type="file" name="file" id="image_file" onchange="fileSelected();" multiple /></div>
                     </div>
                     <div>
-                        <input type="submit" value="Split"   id="submit"   /><br>
+                        <input type="submit" value="Upload"    onclick="startUploading()"  /><br>
               <!--        <input type="submit" value="UploadSub"   onclick="startUploading()"  />--> 
                         
                     </div>

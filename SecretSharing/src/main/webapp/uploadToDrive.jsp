@@ -9,30 +9,14 @@
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
 <title>Upload File to Google Drive</title>
  
-<link type="text/css" rel="stylesheet"  href="style.css" />
+<link type="text/css" rel="stylesheet"  href="JS-CSS/style.css" />
  
 </head>
 <body>
 
-<!-- 
-	<br>
-	<div class="fileUpload">
-		<form
-			action="http://localhost:8016/googleDriveSecurity/webapi/myresource/upload"
-			enctype="multipart/form-data" method="post">
- 			 
-			<p> Please choose a file : </p>
-			<input type="file" name="file"  ><br>
-			<br>
-			<span> <input type="submit" value="Upload"  > </span>	
-
-
-		</form>
-	</div>
-	 -->
- 	<br>
+   
 	
-	<script src="uploadFile.js"></script>
+	<script src="JS-CSS/uploadFile.js"></script>
 	
 	
 	  
@@ -40,13 +24,13 @@
   
 			
             <div class="upload_form_cont">
-                <form id="upload_form" enctype="multipart/form-data" method="post" action="http://localhost:8016/SecretSharing/webapi/myresource/upload">
+                <form id="upload_form" enctype="multipart/form-data" method="post" action="http://localhost:8016/SecretSharing/webapi/myresourceGoogleDrive/uploadToDrive">
                     <div>
                          
-                        <div>Select File : <input type="file" name="file" id="image_file" onchange="fileSelected();" /></div>
+                        <div>Select File : <input type="file" name="file" id="image_file" onchange="fileSelected();" multiple /></div>
                     </div>
                     <div>
-                        <input type="button" value="Upload"    onclick="startUploading()"  /><br>
+                        <input type="submit" value="Upload"    onclick="startUploading()"  /><br>
               <!--        <input type="submit" value="UploadSub"   onclick="startUploading()"  />--> 
                         
                     </div>

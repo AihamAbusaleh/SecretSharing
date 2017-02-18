@@ -1,6 +1,8 @@
-package algorithm.aes256sha256;
+package algorithms.AES;
 
 public class CryptoException extends Exception {
+
+	 
 
 	public CryptoException() {
 	}

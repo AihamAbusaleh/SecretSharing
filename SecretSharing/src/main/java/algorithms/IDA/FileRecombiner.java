@@ -1,29 +1,28 @@
-package algorithm.ida;
+package algorithms.IDA;
 
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
-import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.security.InvalidAlgorithmParameterException;
 import java.security.NoSuchAlgorithmException;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Base64;
 import java.util.List;
 import java.util.Scanner;
-import org.ejml.simple.SimpleMatrix;
 
+import com.google.api.client.testing.util.TestableByteArrayInputStream;
 import com.google.common.primitives.Ints;
 
-import algorithm.aes256sha256.CryptoException;
-import algorithm.aes256sha256.CryptoUtils;
+import algorithms.AES.CryptoException;
+import algorithms.AES.CryptoUtils;
 import lib.finiteFieldLibrary.GF2N;
 import lib.finiteFieldLibrary.Matrix;
 import lib.finiteFieldLibrary.MatrixGF2N;
- 
+
 /**
- * this class is used to recombine the original file from two files(slices.splt)
+ * this class is used to recombine the original file from min of slices
  * 
  * @author AIN
  *
@@ -34,48 +33,79 @@ public class FileRecombiner {
 	static GF2N galoisField = new GF2N(irreduciblePolynomial);
 	static MatrixGF2N matGf = new MatrixGF2N(galoisField);
 
-	public static File[] returnEncryptedFiles(int min) throws InvalidAlgorithmParameterException, CryptoException {
- 
+	/**
+	 * @param min
+	 *            the number of slices
+	 * @return a list of the slices in order to recombine the file from them
+	 * @throws InvalidAlgorithmParameterException
+	 * @throws CryptoException
+	 */
+	public static File[] getEncryptedSlices(int min) throws InvalidAlgorithmParameterException, CryptoException {
+
 		File dir = new File("D:/");
 		File[] filesInDir = dir.listFiles(new Extension());
 		int i = 0;
-		
+
 		for (File f : filesInDir) {
 			File dec = null;
 			if (i != min) {
-			  dec = 	CryptoUtils.decrypt(f, f); // has to dec 2 times when it was downloaded from google ^^ otherwise one time 
-			  dec = 	CryptoUtils.decrypt(f, f);
- 				filesInDir[i] = dec;
-
-				i++;
+				// has to dec 2 times when it was downloaded from google ^^
+				// otherwise one time
+			//	String pathFile =   f.getAbsolutePath() + i;
+		 
+			 	dec = CryptoUtils.decrypt(f, f);
+ 			 
+				filesInDir[i] = dec;
+				 
+ 				i++;
 			}
 
 		}
-
-		return filesInDir;
+		
+ 		return filesInDir;
 
 	}
 
-	public static void recombineMyOriginalFile(int min) throws NoSuchAlgorithmException, UnsupportedEncodingException,
-			InvalidAlgorithmParameterException, CryptoException {
+	/**
+	 * @param slices
+	 *            the reconstructed matrix from min slices
+	 * @param subAMatrix
+	 *            the sub matrix from the encrypting Matrix
+	 * @return
+	 */
+	public static byte[] getTheOriginalByteArray(Matrix slices, Matrix subAMatrix) {
 
-		File[] filesInDir = returnEncryptedFiles(min);
+		Matrix invertSubMatrix = matGf.inverse(subAMatrix);
+		Matrix originalMatrix = matGf.multiply(invertSubMatrix, slices);
+	 	originalMatrix.transpose();
+ 
+	 	int[][] test = Casting.castFromMatrixToInt(originalMatrix);
+		int[] matrixToArray = Casting.convert2Dto1D(test);
+		byte[] intTobyte = Casting.castToByte(matrixToArray);
+		return intTobyte;
+	}
+
+	@SuppressWarnings("resource")
+	public static void reconstructTheOriginalFileFromMinSlices(int min) throws NoSuchAlgorithmException,
+			UnsupportedEncodingException, InvalidAlgorithmParameterException, CryptoException {
+
+		File[] filesInDir = getEncryptedSlices(min);
 		int index;
 
 		index = filesInDir[0].getName().lastIndexOf('_');
 		File dest = new File("D:/" + filesInDir[0].getName().substring(0, index));
-		List<File> allFile = new ArrayList<File>();
+		List<File> allSlices = new ArrayList<File>();
 
 		for (File file : filesInDir) {
-			allFile.add(file);
+			allSlices.add(file);
 		}
 
-		List<Integer> list = new ArrayList<Integer>();
-		List<Integer> listKey = new ArrayList<Integer>();
+		List<Integer> listOfStoredIntegers = new ArrayList<Integer>();
+		List<Integer> listOfStoredKeys = new ArrayList<Integer>();
 
-		int[] arraylist;
-		int[] arrayKeys;
-		int[][] ccMatrix;
+		int[] convertListOfStoredIntegers;
+		int[] convertListOfStoredKeys;
+		int[][] subCMatrix;
 		int[][] subAMatrix;
 		String firstPart = " ";
 		String secoundPart = " ";
@@ -83,19 +113,19 @@ public class FileRecombiner {
 		Scanner scan;
 		try {
 
-			for (File f : allFile) {
+			for (File f : allSlices) {
 				scan = new Scanner(f);
-				// copy the content of 2 slices into a list
+				// copy the content of slices into a list
 				while (scan.hasNext()) {
 					String str = scan.nextLine();
 					firstPart = str.substring(0, str.indexOf("?") - 1);
-
 					String[] splitString = firstPart.split(" ");
 
 					for (String number : splitString) {
-						list.add(Integer.parseInt(number));
+						listOfStoredIntegers.add(Integer.parseInt(number));
 
 					}
+
 					secoundPart = str.substring(firstPart.length() + 2, str.length());
 					String s = secoundPart.replaceAll("\\?", " ");
 
@@ -106,30 +136,28 @@ public class FileRecombiner {
 						return;
 					}
 					for (String number : splitMatrix) {
-						listKey.add(Integer.parseInt(number));
+						listOfStoredKeys.add(Integer.parseInt(number));
 
 					}
 				}
+				 
 			}
 
-			// make 2D array from the list
-			arraylist = Ints.toArray(list);
+			convertListOfStoredIntegers = Ints.toArray(listOfStoredIntegers);
 
-			ccMatrix = Converting.convert1Dto2D(arraylist, min, list.size() / min);
-			Matrix sl = new Matrix(Converting.catingTo2dLongFromInt(ccMatrix));
-			Matrix inGF = new Matrix(sl, galoisField.getFieldSize());
-			// System.out.println("Matrixssss " + inGF);
-			arrayKeys = Ints.toArray(listKey);
+			subCMatrix = Casting.convert1Dto2D(convertListOfStoredIntegers, min, listOfStoredIntegers.size() / min);
+			Matrix toMatrix = new Matrix(Casting.castToLong(subCMatrix));
+			Matrix subCMatrixInGF256 = new Matrix(toMatrix, galoisField.getFieldSize());
 
-			subAMatrix = Converting.convert1Dto2D(arrayKeys, min, min);
-			long[][] con = Converting.catingTo2dLongFromInt(subAMatrix);
-			Matrix subGF = new Matrix(con);
-			Matrix subOverGF = new Matrix(subGF, galoisField.getFieldSize());
-			// System.out.println("Sub A Matrix " + subOverGF);
-			byte[] fileArray = myFile(inGF, subOverGF);
+			convertListOfStoredKeys = Ints.toArray(listOfStoredKeys);
 
-			restoreOriginalFile(fileArray, dest);
-			// CryptoUtils.decrypt(dest, new File(dest.getAbsolutePath()));
+			subAMatrix = Casting.convert1Dto2D(convertListOfStoredKeys, min, min);
+			Matrix toMatrix2 = new Matrix(Casting.castToLong(subAMatrix));
+			Matrix subAMatrixInGF256 = new Matrix(toMatrix2, galoisField.getFieldSize());
+ 
+			byte[] fileArray = getTheOriginalByteArray(subCMatrixInGF256, subAMatrixInGF256);
+
+			createTheOriginalFile(fileArray, dest);
 
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
@@ -137,38 +165,24 @@ public class FileRecombiner {
 
 	}
 
-	public static byte[] myFile(Matrix array, Matrix subAMatrix) {
-
-		Matrix invertedMatrix = matGf.inverse(subAMatrix);
-		System.out.println("inverse " + invertedMatrix);
-		Matrix result = matGf.multiply(invertedMatrix, array);
-		result.transpose();
-		int[] fileArray = Converting.convert2Dto1D(Converting.catingTo2dLongFromInt(result));
-
-		byte[] fileArrayInt = Converting.castingTo1dByte(fileArray);
-		System.out.println("Result " + Arrays.toString(fileArrayInt));
-		return fileArrayInt;
-	}
-
-	public static void restoreOriginalFile(byte[] fileArray, File dest)
+	public static void createTheOriginalFile(byte[] fileArray, File dest)
 			throws NoSuchAlgorithmException, UnsupportedEncodingException {
 		try {
 
 			FileOutputStream fileOuputStream = new FileOutputStream(dest.getAbsolutePath());
 			fileOuputStream.write(fileArray);
 			fileOuputStream.close();
+			
 
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 
 	}
-
-	public static void main(String ar[])
-			throws IOException, NoSuchAlgorithmException, InvalidAlgorithmParameterException, CryptoException {
-
-	 	recombineMyOriginalFile(2);
-	//	CryptoUtils.decrypt(new File("D:/testen.txt_3.splt.encsss"), new File("D:/testen.txt_3.splt.decdecdec"));
+	
+	public static void main(String[] args) throws NoSuchAlgorithmException, UnsupportedEncodingException, InvalidAlgorithmParameterException, CryptoException{
+		reconstructTheOriginalFileFromMinSlices(3);
+		
 	}
 
 }

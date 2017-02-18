@@ -1,4 +1,4 @@
-package algorithm.aes256sha256;
+package algorithms.AES;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -21,14 +21,12 @@ import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
 
 import org.apache.commons.codec.binary.Base64;
-import org.ejml.simple.SimpleMatrix;
-
-import algorithm.ida.Converting;
  
+  
 /**
  * A utility class that encrypts or decrypts a file.
  * 
- * @author www.codejava.net
+ * @author www.codejava.net and AIN
  *
  */
 public class CryptoUtils {
