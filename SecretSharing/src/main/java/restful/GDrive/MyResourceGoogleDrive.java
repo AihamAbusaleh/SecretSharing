@@ -43,19 +43,18 @@ public class MyResourceGoogleDrive {
 	@Consumes(MediaType.MULTIPART_FORM_DATA)
 	public String upload(FormDataMultiPart files)
 			throws MalformedURLException {
-		// @FormDataParam("file") FormDataContentDisposition fileDetail
-		List<FormDataBodyPart> fields = files.getFields("file");
+ 		List<FormDataBodyPart> fields = files.getFields("file");
 
 		try {
 			Auth.httpTransport = GoogleNetHttpTransport.newTrustedTransport();
-			Auth.dataStoreFactory = new FileDataStoreFactory(UploadMethod.DATA_STORE_DIR);
+			Auth.dataStoreFactory = new FileDataStoreFactory(UploadToGoogleDrive.DATA_STORE_DIR);
 			// authorization
 			Credential credential = Auth.authorize();
 			// set up the global Drive instance
-			UploadMethod.drive = new Drive.Builder(Auth.httpTransport, Auth.JSON_FACTORY, credential)
-					.setApplicationName(UploadMethod.APPLICATION_NAME).build();
+			UploadToGoogleDrive.drive = new Drive.Builder(Auth.httpTransport, Auth.JSON_FACTORY, credential)
+					.setApplicationName(UploadToGoogleDrive.APPLICATION_NAME).build();
 			for (FormDataBodyPart f : fields) {
-				UploadMethod.uploadFile(true, f.getFormDataContentDisposition().getFileName());
+				UploadToGoogleDrive.uploadFile(true, f.getFormDataContentDisposition().getFileName());
 			}
 
 			return  fields.size() + " Files were seccsesfully uploaded .....";

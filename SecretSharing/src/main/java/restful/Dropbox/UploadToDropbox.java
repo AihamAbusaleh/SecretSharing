@@ -56,13 +56,8 @@ public class UploadToDropbox {
 	}
 
 	public static void  uploadToDropboxMethod(String argAuthFile, String localPath,String dropboxPath) throws IOException {
-		// Only display important log messages.
-		Logger.getLogger("").setLevel(Level.WARNING);
-
-	 
-
-	
-
+ 		Logger.getLogger("").setLevel(Level.WARNING);
+ 
 		// Read auth info file.
 		DbxAuthInfo authInfo;
 		try {
@@ -98,6 +93,6 @@ public class UploadToDropbox {
 		DbxClientV2 dbxClient = new DbxClientV2(requestConfig, authInfo.getAccessToken(), authInfo.getHost());
 		uploadFile(dbxClient, localFile, dropboxPath);
 		
-	//	System.exit(0);
+	 
 	}
 }

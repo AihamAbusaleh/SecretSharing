@@ -7,7 +7,7 @@ import com.google.api.services.drive.model.File;
 
 import algorithms.AES.CryptoUtils;
  
-public class UploadMethod {
+public class UploadToGoogleDrive {
 	public static Drive drive;
 	public static final String APPLICATION_NAME = "GoogleDriveTest";
 	static final String UPLOAD_FILE_PATH = "D:/TEST/";
