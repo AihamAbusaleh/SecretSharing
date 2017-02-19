@@ -1,6 +1,7 @@
 package algorithms.IDA;
 
 import java.util.Arrays;
+import java.util.Random;
 
 import lib.finiteFieldLibrary.Matrix;
 
@@ -91,5 +92,7 @@ public class Casting {
 		}
 		return bidi;
 	}
-
+	
+	
+	
 }

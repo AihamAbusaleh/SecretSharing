@@ -5,22 +5,16 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.io.UnsupportedEncodingException;
-import java.security.InvalidAlgorithmParameterException;
-import java.security.NoSuchAlgorithmException;
 import java.util.Arrays;
 
-import org.eclipse.persistence.platform.database.TimesTen7Platform;
+import com.google.api.client.testing.util.TestableByteArrayInputStream;
 
-import algorithms.AES.CryptoException;
 import lib.finiteFieldLibrary.GF2N;
 import lib.finiteFieldLibrary.Matrix;
 import lib.finiteFieldLibrary.MatrixGF2N;
 
- 
 /**
- * @author AIN
-   * Class to split the original File into slices " IDA Algorithm "
+ * @author AIN Class to split the original File into slices " IDA Algorithm "
  */
 public class FileSplitter {
 
@@ -28,12 +22,12 @@ public class FileSplitter {
 	static GF2N galoisField = new GF2N(irreduciblePolynomial);
 	static MatrixGF2N matGf = new MatrixGF2N(galoisField);
 
-	
-	 
 	/**
-	 * @param originalFile to be read into byte array 
-	 * @param min the number of slices in order to recombine the original file
-	 * @return a Matrix of bytes 
+	 * @param originalFile
+	 *            to be read into byte array
+	 * @param min
+	 *            the number of slices in order to recombine the original file
+	 * @return a Matrix of bytes
 	 * @throws Exception
 	 */
 	public static Matrix createMatrixFromOriginalFile(File originalFile, int min) throws Exception {
@@ -78,15 +72,18 @@ public class FileSplitter {
 	}
 
 	/**
-	 * @param originalFile to be split into slices 
-	 * @param max the number of slices 
-	 * @param min the number of slices in order to recombine the original file
+	 * @param originalFile
+	 *            to be split into slices
+	 * @param max
+	 *            the number of slices
+	 * @param min
+	 *            the number of slices in order to recombine the original file
 	 * @throws Exception
 	 */
 	public static void splitOriginalFile(File originalFile, int max, int min) throws Exception {
 
-		Matrix matrixF = createMatrixFromOriginalFile(originalFile, min);  
-																			 
+		Matrix matrixF = createMatrixFromOriginalFile(originalFile, min);
+
 		Matrix matrixA = createEncryptingMatrix(max, min);
 		Matrix matrixC = matGf.multiply(matrixA, matrixF);
 
@@ -118,18 +115,25 @@ public class FileSplitter {
 	}
 
 	/**
-	 * @param max number of rows , define the number of slices, that the file should be split 
-	 * @param min number of columns
-	 * @return random encrypting matrix in GF256 
+	 * @param max
+	 *            number of rows , define the number of slices, that the file
+	 *            should be split
+	 * @param min
+	 *            number of columns
+	 * @return random encrypting matrix in GF256
 	 */
 	public static Matrix createEncryptingMatrix(int max, int min) {
 
-		Matrix matrixA = new Matrix(max, min, galoisField.getFieldSize());
+		// Matrix matrixA = new Matrix(max, min, galoisField.getFieldSize());
+		 
+		Matrix v = new Matrix();
 
-		return matrixA;
+		Matrix vandermonde = new Matrix(v.vandermonde(max, min, galoisField.getFieldSize()));
+		return vandermonde;
 	}
-	public static void main(String[] args) throws Exception{
-		splitOriginalFile(new File("D:/TEST/testen.txt"), 4, 2);
-		
-	}
+
+//	public static void main(String[] args) throws Exception {
+//		  splitOriginalFile(new File("D:/TEST/testen.txt"), 4, 2);
+//	
+//	}
 }

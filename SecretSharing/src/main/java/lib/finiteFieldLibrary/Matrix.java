@@ -223,4 +223,24 @@ public class Matrix {
         }
         return result;
     }
+    
+    
+    public  long[][] vandermonde(int n , int m , int bitSize){
+		 long[][] V = new long[n][m]; 
+		 Random rn = new Random();
+	 
+	    	for (int i = 0; i < n; i++) {
+	    		long number = Math.abs(rn.nextLong()) ;
+	    		V[i][0] = 1;
+				V[i][1] =  number  & generateBitMask(bitSize) ;
+				for (int j = 2; j < m; j++) {
+					V[i][j] = (V[i][j-1] * number ) & generateBitMask(bitSize);
+					
+				}
+			}
+	   // 	System.out.println(Arrays.deepToString(V));
+
+	    	return V;
+	    }
+
 }
