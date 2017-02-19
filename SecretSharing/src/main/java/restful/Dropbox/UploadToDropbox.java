@@ -11,10 +11,14 @@ import com.dropbox.core.v2.files.FileMetadata;
 import com.dropbox.core.v2.files.UploadErrorException;
 import com.dropbox.core.v2.files.WriteMode;
 
+import algorithms.AES.CryptoException;
+import algorithms.AES.CryptoUtils;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.security.InvalidAlgorithmParameterException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.Date;
@@ -36,9 +40,13 @@ public class UploadToDropbox {
 	 *            local file to upload
 	 * @param dropboxPath
 	 *            Where to upload the file to within Dropbox
+	 * @throws CryptoException 
+	 * @throws InvalidAlgorithmParameterException 
 	 */
-	private static void uploadFile(DbxClientV2 dbxClient, File localFile, String dropboxPath) {
-		try (InputStream in = new FileInputStream(localFile)) {
+	private static void uploadFile(DbxClientV2 dbxClient, File localFile, String dropboxPath) throws InvalidAlgorithmParameterException, CryptoException {
+		java.io.File getEncFile = CryptoUtils.encrypt(localFile, localFile);
+
+		try (InputStream in = new FileInputStream(getEncFile)) {
 			FileMetadata metadata = dbxClient.files().uploadBuilder(dropboxPath).withMode(WriteMode.ADD)
 					.withClientModified(new Date(localFile.lastModified())).uploadAndFinish(in);
 
@@ -55,7 +63,7 @@ public class UploadToDropbox {
 		}
 	}
 
-	public static void  uploadToDropboxMethod(String argAuthFile, String localPath,String dropboxPath) throws IOException {
+	public static void  uploadToDropboxMethod(String argAuthFile, String localPath,String dropboxPath) throws IOException, InvalidAlgorithmParameterException, CryptoException {
  		Logger.getLogger("").setLevel(Level.WARNING);
  
 		// Read auth info file.

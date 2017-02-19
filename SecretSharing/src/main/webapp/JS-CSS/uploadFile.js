@@ -4,8 +4,15 @@ var iPreviousBytesLoaded = 0;
 var iMaxFilesize = 1048576999; // 1MB
 var oTimer = 0;
 var sResultFileSize = '';
+function redirectToDrive(elem){
+	 
+    elem.setAttribute("action","uploadToDrive.jsp");
+  
+	  elem.submit();
+}
  
-function secondsToTime(secs) { // we will use this function to convert seconds in normal time format
+function secondsToTime(secs) { // we will use this function to convert seconds
+								// in normal time format
     var hr = Math.floor(secs / 3600);
     var min = Math.floor((secs - (hr * 3600))/60);
     var sec = Math.floor(secs - (hr * 3600) -  (min * 60));
@@ -36,7 +43,7 @@ function fileSelected() {
     // get selected file element
     var oFile = document.getElementById('image_file').files[0];
     var oImage = document.getElementById('preview');
-
+    
     // filter for image files
     var rFilter = /^(image\/bmp|image\/gif|image\/jpeg|image\/png|image\/tiff)$/i;
     if (! rFilter.test(oFile.type)) {
@@ -46,10 +53,10 @@ function fileSelected() {
     }
 
     // little test for filesize
-//    if (oFile.size > iMaxFilesize) {
-//        document.getElementById('warnsize').style.display = 'block';
-//        return;
-//    }
+// if (oFile.size > iMaxFilesize) {
+// document.getElementById('warnsize').style.display = 'block';
+// return;
+// }
 
     // get preview element
 
@@ -57,11 +64,13 @@ function fileSelected() {
     var oReader = new FileReader();
         oReader.onload = function(e){
 
-        // e.target.result contains the DataURL which we will use as a source of the image
+        // e.target.result contains the DataURL which we will use as a source of
+		// the image
         oImage.src = e.target.result;
 
-       //  oImage.onload = function () { // binding onload event
-
+    
+       // oImage.onload = function () { // binding onload event
+      
             // we are going to display some custom image information here
             sResultFileSize = bytesToSize(oFile.size);
             document.getElementById('fileinfo').style.display = 'block';
@@ -73,7 +82,7 @@ function fileSelected() {
     };
 
     // read selected file as DataURL
-    oReader.readAsDataURL(oFile);
+    oReader.readAsDataURL(oFile );
 }
 
 function startUploading() {
@@ -90,16 +99,19 @@ function startUploading() {
     oProgress.style.width = '0px';
 
     // get form data for POSTing
-    //var vFD = document.getElementById('upload_form').getFormData(); // for FF3
+    // var vFD = document.getElementById('upload_form').getFormData(); // for
+	// FF3
     var vFD = new FormData(document.getElementById('upload_form')); 
 
-    // create XMLHttpRequest object, adding few event listeners, and POSTing our data
+    // create XMLHttpRequest object, adding few event listeners, and POSTing our
+	// data
     var oXHR = new XMLHttpRequest();
     oXHR.upload.addEventListener('progress', uploadProgress, false);
     oXHR.addEventListener('load', uploadFinish, false);
     oXHR.addEventListener('error', uploadError, false);
     oXHR.addEventListener('abort', uploadAbort, false);
-  //  oXHR.open('POST', 'http://localhost:8016/googleDriveSecurity/webapi/myresource/split');
+  // oXHR.open('POST',
+	// 'http://localhost:8016/googleDriveSecurity/webapi/myresource/split');
     oXHR.send(vFD);
 
     // set inner timer
@@ -128,7 +140,8 @@ function doInnerUpdates() { // we will use this function to display upload speed
     }
 
     document.getElementById('speed').innerHTML = iSpeed;
- //   document.getElementById('remaining').innerHTML = '| ' + secondsToTime(secondsRemaining);
+ // document.getElementById('remaining').innerHTML = '| ' +
+	// secondsToTime(secondsRemaining);
 }
 
 function uploadProgress(e) { // upload process in progress
@@ -159,7 +172,7 @@ function uploadFinish(e) { // upload successfully finished
     document.getElementById('progress_percent').innerHTML = '100%';
     document.getElementById('progress').style.width = '400px';
     document.getElementById('filesize').innerHTML = sResultFileSize;
-  //  document.getElementById('remaining').innerHTML = '| 00:00:00';
+  // document.getElementById('remaining').innerHTML = '| 00:00:00';
 
     clearInterval(oTimer);
 }

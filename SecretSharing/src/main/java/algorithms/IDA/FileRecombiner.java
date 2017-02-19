@@ -3,6 +3,7 @@ package algorithms.IDA;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.security.InvalidAlgorithmParameterException;
 import java.security.NoSuchAlgorithmException;
@@ -39,30 +40,32 @@ public class FileRecombiner {
 	 * @return a list of the slices in order to recombine the file from them
 	 * @throws InvalidAlgorithmParameterException
 	 * @throws CryptoException
+	 * @throws IOException 
 	 */
-	public static File[] getEncryptedSlices(int min) throws InvalidAlgorithmParameterException, CryptoException {
+	public static File[] getEncryptedSlices(int min) throws InvalidAlgorithmParameterException, CryptoException, IOException {
 
 		File dir = new File("D:/");
 		File[] filesInDir = dir.listFiles(new Extension());
 		int i = 0;
-
+		 
 		for (File f : filesInDir) {
 			File dec = null;
+			 File temp = File.createTempFile(f.getAbsolutePath(), ".tmp");
+
+			 temp.deleteOnExit();
 			if (i != min) {
-				// has to dec 2 times when it was downloaded from google ^^
-				// otherwise one time
-			//	String pathFile =   f.getAbsolutePath() + i;
-		 
-			 	dec = CryptoUtils.decrypt(f, f);
- 			 
+			
+
+				dec = CryptoUtils.decrypt(f, temp);
+
 				filesInDir[i] = dec;
-				 
- 				i++;
+
+				i++;
 			}
 
 		}
-		
- 		return filesInDir;
+
+		return filesInDir;
 
 	}
 
@@ -74,12 +77,12 @@ public class FileRecombiner {
 	 * @return
 	 */
 	public static byte[] getTheOriginalByteArray(Matrix slices, Matrix subAMatrix) {
-
+		System.out.println(subAMatrix);
 		Matrix invertSubMatrix = matGf.inverse(subAMatrix);
 		Matrix originalMatrix = matGf.multiply(invertSubMatrix, slices);
-	 	originalMatrix.transpose();
- 
-	 	int[][] test = Casting.castFromMatrixToInt(originalMatrix);
+		originalMatrix.transpose();
+
+		int[][] test = Casting.castFromMatrixToInt(originalMatrix);
 		int[] matrixToArray = Casting.convert2Dto1D(test);
 		byte[] intTobyte = Casting.castToByte(matrixToArray);
 		return intTobyte;
@@ -87,7 +90,7 @@ public class FileRecombiner {
 
 	@SuppressWarnings("resource")
 	public static void reconstructTheOriginalFileFromMinSlices(int min) throws NoSuchAlgorithmException,
-			UnsupportedEncodingException, InvalidAlgorithmParameterException, CryptoException {
+			InvalidAlgorithmParameterException, CryptoException, IOException {
 
 		File[] filesInDir = getEncryptedSlices(min);
 		int index;
@@ -140,7 +143,7 @@ public class FileRecombiner {
 
 					}
 				}
-				 
+
 			}
 
 			convertListOfStoredIntegers = Ints.toArray(listOfStoredIntegers);
@@ -154,7 +157,7 @@ public class FileRecombiner {
 			subAMatrix = Casting.convert1Dto2D(convertListOfStoredKeys, min, min);
 			Matrix toMatrix2 = new Matrix(Casting.castToLong(subAMatrix));
 			Matrix subAMatrixInGF256 = new Matrix(toMatrix2, galoisField.getFieldSize());
- 
+
 			byte[] fileArray = getTheOriginalByteArray(subCMatrixInGF256, subAMatrixInGF256);
 
 			createTheOriginalFile(fileArray, dest);
@@ -172,17 +175,16 @@ public class FileRecombiner {
 			FileOutputStream fileOuputStream = new FileOutputStream(dest.getAbsolutePath());
 			fileOuputStream.write(fileArray);
 			fileOuputStream.close();
-			
 
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 
 	}
-	
-	public static void main(String[] args) throws NoSuchAlgorithmException, UnsupportedEncodingException, InvalidAlgorithmParameterException, CryptoException{
+
+	public static void main(String[] args) throws NoSuchAlgorithmException, InvalidAlgorithmParameterException, CryptoException, IOException {
 		reconstructTheOriginalFileFromMinSlices(3);
-		
+
 	}
 
 }

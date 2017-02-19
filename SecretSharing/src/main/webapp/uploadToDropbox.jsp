@@ -22,7 +22,9 @@
 	  
         <div class="container">
   
-			
+		 <img align="middle" style="border-radius: 50%;  max-width: 300px; 
+    max-height: 300px " src="http://www.pcprofessionale.it/wp-content/uploads/2016/10/dropbox.png" />
+		
             <div class="upload_form_cont">
                 <form id="upload_form" enctype="multipart/form-data" method="post" action="http://localhost:8016/SecretSharing/webapi/myresourceDropbox/uploadToDropbox">
                     <div>
@@ -38,8 +40,8 @@
                         <div id="filename"></div>
                          <div id="TEST"></div>
                         <div id="filesize"></div>
-                        <div id="filetype"></div>
-                        <div id="filedim"></div>
+                      
+                       
                     </div>
                     <div id="error">You should select valid image files in order to display it here !!</div>
                     <div id="error2">An error occurred while uploading the file</div>

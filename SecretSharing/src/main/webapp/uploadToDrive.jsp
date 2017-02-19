@@ -21,13 +21,15 @@
 	
 	  
         <div class="container">
-  
+   <img align="middle" style="border-radius: 50%;  max-width: 300px; 
+    max-height: 300px " src="http://www.webnews.it/wp-content/uploads/2014/12/google_drive-540x320.jpg" />
+	 
 			
             <div class="upload_form_cont">
                 <form id="upload_form" enctype="multipart/form-data" method="post" action="http://localhost:8016/SecretSharing/webapi/myresourceGoogleDrive/uploadToDrive">
                     <div>
                          
-                        <div>Select File : <input type="file" name="file" id="image_file" onchange="fileSelected();" multiple /></div>
+                        <div>Select File(s) : <input type="file" name="file" id="image_file" onchange="fileSelected();" multiple /></div>
                     </div>
                     <div>
                         <input type="submit" value="Upload"    onclick="startUploading()"  /><br>
@@ -38,9 +40,8 @@
                         <div id="filename"></div>
                          <div id="TEST"></div>
                         <div id="filesize"></div>
-                        <div id="filetype"></div>
-                        <div id="filedim"></div>
-                    </div>
+                   
+                     </div>
                     <div id="error">You should select valid image files in order to display it here !!</div>
                     <div id="error2">An error occurred while uploading the file</div>
                     <div id="abort">The upload has been canceled by the user or the browser dropped the connection</div>
@@ -65,8 +66,7 @@
         </div>
  
 
-	 
-	 
+	
 
 
 	</body>

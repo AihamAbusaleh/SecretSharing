@@ -18,8 +18,9 @@
  	<br>
 	
 	<script src="JS-CSS/uploadFile.js"></script>
-	
-	
+	<h1 id="pageName">File Splitter</h1>
+	<div id="welcome"> Please select a File to be split into max slices <br> 
+	The min input define how many slices are required in order to reconstruct the original File</div>
 	  
         <div class="container">
   
@@ -27,9 +28,9 @@
             <div class="upload_form_cont">
                 <form    id="upload_form" enctype="multipart/form-data" method="post" action="http://localhost:8016/SecretSharing/webapi/myresourceSplit/split">
                     <div>
-                         <div>File to split: <input type="file" name="file" id="image_file" onchange="fileSelected();"  required /></div>
-                         <div>Max Slices : <input type="text" name="max" id="max" onchange="MaximumNValidate();" required /></div>
-                          <div>Min Slices for Recombine: <input type="text" name="min" id="min" onchange="MinimumNValidate();"  required /></div>
+                         <div>File : <input type="file" name="file" id="image_file" onchange="fileSelected();"  required /></div>
+                         <div>Max  : <input type="text" name="max" id="max" onchange="MaximumNValidate();" required /></div>
+                          <div>Min : <input type="text" name="min" id="min" onchange="MinimumNValidate();"  required /></div>
                     </div>
                     <div>
                         <input type="submit" value="Split"   id="submit"   /><br>
@@ -41,7 +42,7 @@
                          <div id="TEST"></div>
                         <div id="filesize"></div>
                         <div id="filetype"></div>
-                        <div id="filedim"></div>
+                       
                     </div>
                     <div id="error">You should select valid image files in order to display it here !!</div>
                     <div id="error2">An error occurred while uploading the file</div>

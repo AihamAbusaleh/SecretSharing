@@ -140,6 +140,9 @@ public class GF2N implements GaloisFieldArithmetic {
             remainder = tempNumerator;
 
             if (remainder == 0 && denumerator != 1) {
+            	System.out.println("elem " + element);
+            	System.out.println("rem " + remainder);
+            	System.out.println("de "  + denumerator);
                 throw new MathArithmeticException("Cannot compute inverse"
                         + " for this element.");
             }

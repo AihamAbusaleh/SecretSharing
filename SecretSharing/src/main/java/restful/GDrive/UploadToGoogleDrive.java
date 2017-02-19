@@ -1,5 +1,8 @@
 package restful.GDrive;
 
+import java.io.IOException;
+import java.io.InputStream;
+
 import com.google.api.client.googleapis.media.MediaHttpUploader;
 import com.google.api.client.http.FileContent;
 import com.google.api.services.drive.Drive;
@@ -20,16 +23,19 @@ public class UploadToGoogleDrive {
  
 		java.io.File ORIGINAL_FILE = new java.io.File(UPLOAD_FILE_PATH + myFile);
 		java.io.File getEncFile = CryptoUtils.encrypt(ORIGINAL_FILE, ORIGINAL_FILE);
- 		java.io.File DECRYPTED_FILE = new java.io.File(getEncFile.getAbsolutePath());
+ 		java.io.File ENCRYPTED_FILE = new java.io.File(getEncFile.getAbsolutePath());
 		File fileMetadata = new File();
-		fileMetadata.setTitle(DECRYPTED_FILE.getName());
+		fileMetadata.setTitle(ENCRYPTED_FILE.getName());
 
-		FileContent mediaContent = new FileContent("*/*", DECRYPTED_FILE);
+		FileContent mediaContent = new FileContent("*/*", ENCRYPTED_FILE);
 
 		Drive.Files.Insert insert = drive.files().insert(fileMetadata, mediaContent);
 		MediaHttpUploader uploader = insert.getMediaHttpUploader();
 		uploader.setDirectUploadEnabled(useDirectUpload);
 		return insert.execute();
 	}
+	
+	
+
 	 
 }

@@ -1,31 +1,20 @@
 package restful.GDrive;
 
-import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
 import java.net.MalformedURLException;
-import java.net.URL;
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.ws.rs.Consumes;
-import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
 import org.glassfish.jersey.media.multipart.FormDataBodyPart;
-import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
 import org.glassfish.jersey.media.multipart.FormDataMultiPart;
-import org.glassfish.jersey.media.multipart.FormDataParam;
-
 import com.google.api.client.auth.oauth2.Credential;
 import com.google.api.client.googleapis.javanet.GoogleNetHttpTransport;
 import com.google.api.client.util.store.FileDataStoreFactory;
 import com.google.api.services.drive.Drive;
-
-import algorithms.IDA.FileSplitter;
 
 /**
  * Root resource (exposed at "myresource" path)
@@ -33,10 +22,6 @@ import algorithms.IDA.FileSplitter;
 @Path("myresourceGoogleDrive")
 public class MyResourceGoogleDrive {
 	static final String UPLOAD_FILE_PATH = "D:/TEST/";
-
- 
-
-	 
 
 	@POST
 	@Path("/uploadToDrive")
@@ -68,4 +53,7 @@ public class MyResourceGoogleDrive {
 
 	}
 
+	 
+	
+	
 }

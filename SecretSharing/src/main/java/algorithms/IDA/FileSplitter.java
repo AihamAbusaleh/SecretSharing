@@ -6,6 +6,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.Arrays;
+import java.util.Random;
 
 import com.google.api.client.testing.util.TestableByteArrayInputStream;
 
@@ -128,12 +129,16 @@ public class FileSplitter {
 		 
 		Matrix v = new Matrix();
 
-		Matrix vandermonde = new Matrix(v.vandermonde(max, min, galoisField.getFieldSize()));
-		return vandermonde;
+		Matrix vandermonde = new Matrix(v.vandermonde(max, min ));
+	//	Matrix vandermondeGF256 = new Matrix(vandermonde, galoisField.getFieldSize());
+		System.out.println(vandermonde);
+ 		return vandermonde;
 	}
 
-//	public static void main(String[] args) throws Exception {
-//		  splitOriginalFile(new File("D:/TEST/testen.txt"), 4, 2);
-//	
-//	}
+	public static void main(String[] args) throws Exception {
+		  splitOriginalFile(new File("D:/TEST/testen.txt"), 4, 3);
+	
+	}
+	
+ 
 }

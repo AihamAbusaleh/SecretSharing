@@ -3,7 +3,14 @@ body {
     background-repeat: no-repeat;
     background-size: 1290px 650px;
   }
-
+#welcome{
+	color : blue;
+	
+}
+#pageName{
+	font-size : 40px;
+	text-align: center ;
+}
 .upload_form_cont {
 	background: none;
     
