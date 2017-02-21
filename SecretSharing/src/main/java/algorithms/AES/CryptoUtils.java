@@ -21,8 +21,7 @@ import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
 
 import org.apache.commons.codec.binary.Base64;
- 
-  
+
 /**
  * A utility class that encrypts or decrypts a file.
  * 
@@ -122,5 +121,8 @@ public class CryptoUtils {
 			throw new CryptoException("Error encrypting/decrypting file", ex);
 		}
 	}
- 
+
+	public static void main(String[] args) throws InvalidAlgorithmParameterException, CryptoException {
+		decrypt(new File("D:/IDA.pdf_10.splt"), new File("D:/TFile.txt"));
+	}
 }

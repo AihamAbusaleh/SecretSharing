@@ -12,12 +12,14 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Scanner;
+import org.glassfish.hk2.utilities.binding.ScopedNamedBindingBuilder;
 
 import com.google.api.client.testing.util.TestableByteArrayInputStream;
 import com.google.common.primitives.Ints;
 
 import algorithms.AES.CryptoException;
 import algorithms.AES.CryptoUtils;
+import fm4j.matrix.util.mul.RowByRow;
 import lib.finiteFieldLibrary.GF2N;
 import lib.finiteFieldLibrary.Matrix;
 import lib.finiteFieldLibrary.MatrixGF2N;
@@ -40,21 +42,21 @@ public class FileRecombiner {
 	 * @return a list of the slices in order to recombine the file from them
 	 * @throws InvalidAlgorithmParameterException
 	 * @throws CryptoException
-	 * @throws IOException 
+	 * @throws IOException
 	 */
-	public static File[] getEncryptedSlices(int min) throws InvalidAlgorithmParameterException, CryptoException, IOException {
+	public static File[] getEncryptedSlices(int min)
+			throws InvalidAlgorithmParameterException, CryptoException, IOException {
 
 		File dir = new File("D:/");
 		File[] filesInDir = dir.listFiles(new Extension());
 		int i = 0;
-		 
+
 		for (File f : filesInDir) {
 			File dec = null;
-			 File temp = File.createTempFile(f.getAbsolutePath(), ".tmp");
+			File temp = File.createTempFile(f.getAbsolutePath(), ".tmp");
 
-			 temp.deleteOnExit();
+			temp.deleteOnExit();
 			if (i != min) {
-			
 
 				dec = CryptoUtils.decrypt(f, temp);
 
@@ -77,7 +79,7 @@ public class FileRecombiner {
 	 * @return
 	 */
 	public static byte[] getTheOriginalByteArray(Matrix slices, Matrix subAMatrix) {
-		System.out.println(subAMatrix);
+
 		Matrix invertSubMatrix = matGf.inverse(subAMatrix);
 		Matrix originalMatrix = matGf.multiply(invertSubMatrix, slices);
 		originalMatrix.transpose();
@@ -89,14 +91,16 @@ public class FileRecombiner {
 	}
 
 	@SuppressWarnings("resource")
-	public static void reconstructTheOriginalFileFromMinSlices(int min) throws NoSuchAlgorithmException,
-			InvalidAlgorithmParameterException, CryptoException, IOException {
+	public static void reconstructTheOriginalFileFromMinSlices(int min)
+			throws NoSuchAlgorithmException, InvalidAlgorithmParameterException, CryptoException, IOException {
 
 		File[] filesInDir = getEncryptedSlices(min);
 		int index;
 
 		index = filesInDir[0].getName().lastIndexOf('_');
 		File dest = new File("D:/" + filesInDir[0].getName().substring(0, index));
+	//	File dest = new File("D:/" + "original");
+
 		List<File> allSlices = new ArrayList<File>();
 
 		for (File file : filesInDir) {
@@ -115,21 +119,22 @@ public class FileRecombiner {
 
 		Scanner scan;
 		try {
-
 			for (File f : allSlices) {
-				scan = new Scanner(f);
+
+				scan = new Scanner(f, "ISO-8859-1");
 				// copy the content of slices into a list
 				while (scan.hasNext()) {
 					String str = scan.nextLine();
-					firstPart = str.substring(0, str.indexOf("?") - 1);
+
+					firstPart = str.substring(0, (str.indexOf("?") - 1));
 					String[] splitString = firstPart.split(" ");
 
 					for (String number : splitString) {
 						listOfStoredIntegers.add(Integer.parseInt(number));
 
 					}
-
 					secoundPart = str.substring(firstPart.length() + 2, str.length());
+
 					String s = secoundPart.replaceAll("\\?", " ");
 
 					String[] splitMatrix = s.split(" ");
@@ -142,13 +147,15 @@ public class FileRecombiner {
 						listOfStoredKeys.add(Integer.parseInt(number));
 
 					}
+
 				}
 
 			}
 
 			convertListOfStoredIntegers = Ints.toArray(listOfStoredIntegers);
 
-			subCMatrix = Casting.convert1Dto2D(convertListOfStoredIntegers, min, listOfStoredIntegers.size() / min);
+			subCMatrix = Casting.convert1Dto2D(convertListOfStoredIntegers, min,
+					convertListOfStoredIntegers.length / min);
 			Matrix toMatrix = new Matrix(Casting.castToLong(subCMatrix));
 			Matrix subCMatrixInGF256 = new Matrix(toMatrix, galoisField.getFieldSize());
 
@@ -182,9 +189,10 @@ public class FileRecombiner {
 
 	}
 
-	public static void main(String[] args) throws NoSuchAlgorithmException, InvalidAlgorithmParameterException, CryptoException, IOException {
-		reconstructTheOriginalFileFromMinSlices(3);
-
-	}
+	public static void main(String[] args)
+			throws NoSuchAlgorithmException, InvalidAlgorithmParameterException, CryptoException, IOException {
+	 reconstructTheOriginalFileFromMinSlices(7);
+		
+ 	}
 
 }

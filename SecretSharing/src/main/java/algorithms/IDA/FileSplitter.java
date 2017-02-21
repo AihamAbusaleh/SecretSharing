@@ -8,6 +8,8 @@ import java.io.PrintWriter;
 import java.util.Arrays;
 import java.util.Random;
 
+import org.apache.http.impl.cookie.PublicSuffixFilter;
+
 import com.google.api.client.testing.util.TestableByteArrayInputStream;
 
 import lib.finiteFieldLibrary.GF2N;
@@ -84,7 +86,6 @@ public class FileSplitter {
 	public static void splitOriginalFile(File originalFile, int max, int min) throws Exception {
 
 		Matrix matrixF = createMatrixFromOriginalFile(originalFile, min);
-
 		Matrix matrixA = createEncryptingMatrix(max, min);
 		Matrix matrixC = matGf.multiply(matrixA, matrixF);
 
@@ -125,20 +126,16 @@ public class FileSplitter {
 	 */
 	public static Matrix createEncryptingMatrix(int max, int min) {
 
-		// Matrix matrixA = new Matrix(max, min, galoisField.getFieldSize());
-		 
 		Matrix v = new Matrix();
-
-		Matrix vandermonde = new Matrix(v.vandermonde(max, min ));
-	//	Matrix vandermondeGF256 = new Matrix(vandermonde, galoisField.getFieldSize());
+		Matrix vandermonde = new Matrix(v.vandermonde(max, min, galoisField));
 		System.out.println(vandermonde);
- 		return vandermonde;
+		return vandermonde;
 	}
 
-	public static void main(String[] args) throws Exception {
-		  splitOriginalFile(new File("D:/TEST/testen.txt"), 4, 3);
-	
-	}
-	
- 
+//	public static void main(String[] args) throws Exception {
+//		 
+//		splitOriginalFile(new File("D:/TEST/testen.txt"), 10, 7);
+//
+//	}
+
 }

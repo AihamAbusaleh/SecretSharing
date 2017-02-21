@@ -115,7 +115,7 @@ public class MatrixGF2N implements GaloisFieldMatrixArithmetic {
 
         return result;
     }
-
+   
     @Override
     public Matrix multiply(Matrix matrix, Vector vector) {
         Matrix matrixVector = new Matrix(vector.getSize(), 1);

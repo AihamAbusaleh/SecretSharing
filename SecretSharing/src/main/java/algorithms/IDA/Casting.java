@@ -3,6 +3,8 @@ package algorithms.IDA;
 import java.util.Arrays;
 import java.util.Random;
 
+import org.apache.http.HeaderElement;
+
 import lib.finiteFieldLibrary.Matrix;
 
 /**
@@ -83,6 +85,7 @@ public class Casting {
 	 * @return 2D array of int values
 	 */
 	public static int[][] convert1Dto2D(final int[] array, final int rows, final int cols) {
+	
 		if (array.length != (rows * cols))
 			throw new IllegalArgumentException("Invalid array length");
 

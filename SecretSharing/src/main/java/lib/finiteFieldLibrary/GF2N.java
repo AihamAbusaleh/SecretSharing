@@ -99,7 +99,6 @@ public class GF2N implements GaloisFieldArithmetic {
     @Override
     public long invert(long element) {
         isInField(element);
-
         if (element == 1) {
             return 1;
         }
@@ -140,9 +139,7 @@ public class GF2N implements GaloisFieldArithmetic {
             remainder = tempNumerator;
 
             if (remainder == 0 && denumerator != 1) {
-            	System.out.println("elem " + element);
-            	System.out.println("rem " + remainder);
-            	System.out.println("de "  + denumerator);
+            	 
                 throw new MathArithmeticException("Cannot compute inverse"
                         + " for this element.");
             }
@@ -182,8 +179,8 @@ public class GF2N implements GaloisFieldArithmetic {
             bezoutIdentity.set(3, add(temp, multiply(bezoutIdentity.get(3), resultList.get(resultList.size() - 1))));
         }
 
-        //inverted element
-        return bezoutIdentity.get(3);
+        //inverted element 
+         return bezoutIdentity.get(3);
     }
 
     //Square-and-multiply to compute power
@@ -375,4 +372,6 @@ public class GF2N implements GaloisFieldArithmetic {
                     + (BINARY_POWERS[fieldSize] - 1) + "].");
         }
     }
+    
+    
 }

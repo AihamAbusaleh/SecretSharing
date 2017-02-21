@@ -237,32 +237,65 @@ public class Matrix {
 		return result;
 	}
 
-	
+	/**
+	 * Returns the Vandermonde matrix associated with a vector in GF256.
+	 * 
+	 * @param x
+	 *            the second column coefficient
+	 * @return the associated Vanedermonde matrix
+	 */
+	public long[][] vandermonde(int n, int m, GF2N galoisField) {
 
-	public long[][] vandermonde(int n, int m) {
-
-		final long[][] mulsInGF256 = new long[256][256];
+		final long[][] table = new long[256][256];
 
 		for (int a = 0; a < 256; a++)
 			for (int b = 0; b < 256; b++)
-				mulsInGF256[a][b] = mulInGF256(a, b);
+				table[a][b] = galoisField.multiply(a, b);
 
 		long[][] vandermonde = new long[n][m];
-		for (int i = 0; i < n; i++)
-			for (int j = 0; j < m; j++)
-				vandermonde[i][j] = (j == 0 ? 1 : mulsInGF256[(int) vandermonde[i][j - 1]][i]);
- 		
+		for (int i = 0; i < n; i++) {
+			for (int j = 0; j < m; j++) {
+				vandermonde[i][j] = (j == 0 ? 1 : table[(int) vandermonde[i][j - 1]][i]);
+			}
+		}
+
 		return vandermonde;
 
 	}
 
-	public int mulInGF256(int a, int b) {
-		int p = 0;
-		for (; b != 0; b >>= 1) {
-			p ^= (a * (b & 1));
-			a = ((a >> 7) == 1 ? ((a << 1) ^ 0x1B) : (a << 1)) & 0xFF;
-		}
-		return p;
-	}
+	// public int mulInGF256(int a, int b) {
+	// int p = 0;
+	// for (; b != 0; b >>= 1) {
+	// p ^= (a * (b & 1));
+	// a = ((a >> 7) == 1 ? ((a << 1) ^ 0x1B) : (a << 1)) & 0xFF;
+	// }
+	// return p;
+	// }
+
+	/**
+	 * Returns the Vandermonde matrix associated with a vector in GF256.
+	 * 
+	 * @param x
+	 *            the second column coefficient
+	 * @return the associated Vanedermonde matrix
+	 */
+	// public long[][] vandermonde(long[] x, int col, GF2N galoisField) {
+	//
+	// final long[][] table = new long[256][256];
+	// for (int a = 0; a < 256; a++)
+	// for (int b = 0; b < 256; b++)
+	// table[a][b] = galoisField.multiply(a, b);
+	//
+	// long[][] V = new long[x.length][col];
+	// for (int i = 0; i < x.length; i++) {
+	// for (int j = 2; j < col; j++) {
+	// V[i][j] = (j == 0 ? 1 : table[(int) V[i][j - 1]][i]);
+	//
+	// }
+	// System.out.println(Arrays.toString(V[i]));
+	//
+	// }
+	// return V;
+	// }
 
 }

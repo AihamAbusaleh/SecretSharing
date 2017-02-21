@@ -193,6 +193,9 @@ function MinimumNValidate(){
     if(min > max) {
         alert("Minimum value must be lesser than maximum value. " + min + " > " + max );
     } 
+    if(min > 6) {
+        alert("Minimum value must be lesser than  6.");
+    } 
     
 }    
 
