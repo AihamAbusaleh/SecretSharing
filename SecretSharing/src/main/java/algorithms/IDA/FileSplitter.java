@@ -12,6 +12,7 @@ import org.apache.http.impl.cookie.PublicSuffixFilter;
 
 import com.google.api.client.testing.util.TestableByteArrayInputStream;
 
+import algorithms.AES.CryptoUtils;
 import lib.finiteFieldLibrary.GF2N;
 import lib.finiteFieldLibrary.Matrix;
 import lib.finiteFieldLibrary.MatrixGF2N;
@@ -41,8 +42,7 @@ public class FileSplitter {
 
 		byte[][] matrixF;
 		long[][] toLong;
-
-		if (originalFile.length() % min == 0) {
+ 		if (originalFile.length() % min == 0) {
 			matrixF = new byte[(int) originalFileInBytes.length / min][min];
 
 		} else
@@ -70,6 +70,7 @@ public class FileSplitter {
 		} catch (IOException ex) {
 			System.out.println("cannot read/write from/to a file");
 		}
+	
 
 		return originalF;
 	}
@@ -128,14 +129,8 @@ public class FileSplitter {
 
 		Matrix v = new Matrix();
 		Matrix vandermonde = new Matrix(v.vandermonde(max, min, galoisField));
-		System.out.println(vandermonde);
-		return vandermonde;
+ 		return vandermonde;
 	}
-
-//	public static void main(String[] args) throws Exception {
-//		 
-//		splitOriginalFile(new File("D:/TEST/testen.txt"), 10, 7);
-//
-//	}
+ 
 
 }

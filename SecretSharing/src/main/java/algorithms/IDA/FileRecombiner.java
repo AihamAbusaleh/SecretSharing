@@ -49,9 +49,11 @@ public class FileRecombiner {
 
 		File dir = new File("D:/");
 		File[] filesInDir = dir.listFiles(new Extension());
+		File[] filesInDirMin = new File[min];
 		int i = 0;
 
 		for (File f : filesInDir) {
+
 			File dec = null;
 			File temp = File.createTempFile(f.getAbsolutePath(), ".tmp");
 
@@ -60,14 +62,14 @@ public class FileRecombiner {
 
 				dec = CryptoUtils.decrypt(f, temp);
 
-				filesInDir[i] = dec;
+				filesInDirMin[i] = dec;
 
 				i++;
 			}
 
 		}
 
-		return filesInDir;
+		return filesInDirMin;
 
 	}
 
@@ -99,7 +101,7 @@ public class FileRecombiner {
 
 		index = filesInDir[0].getName().lastIndexOf('_');
 		File dest = new File("D:/" + filesInDir[0].getName().substring(0, index));
-	//	File dest = new File("D:/" + "original");
+		// File dest = new File("D:/" + "original");
 
 		List<File> allSlices = new ArrayList<File>();
 
@@ -120,12 +122,10 @@ public class FileRecombiner {
 		Scanner scan;
 		try {
 			for (File f : allSlices) {
-
-				scan = new Scanner(f, "ISO-8859-1");
+				scan = new Scanner(f);
 				// copy the content of slices into a list
 				while (scan.hasNext()) {
 					String str = scan.nextLine();
-
 					firstPart = str.substring(0, (str.indexOf("?") - 1));
 					String[] splitString = firstPart.split(" ");
 
@@ -167,7 +167,7 @@ public class FileRecombiner {
 
 			byte[] fileArray = getTheOriginalByteArray(subCMatrixInGF256, subAMatrixInGF256);
 
-			createTheOriginalFile(fileArray, dest);
+			createTheOriginalFile(trim(fileArray), dest);
 
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
@@ -177,6 +177,7 @@ public class FileRecombiner {
 
 	public static void createTheOriginalFile(byte[] fileArray, File dest)
 			throws NoSuchAlgorithmException, UnsupportedEncodingException {
+
 		try {
 
 			FileOutputStream fileOuputStream = new FileOutputStream(dest.getAbsolutePath());
@@ -189,10 +190,23 @@ public class FileRecombiner {
 
 	}
 
+	static byte[] trim(byte[] bytes) {
+		int i = bytes.length - 1;
+		while (i >= 0 && bytes[i] == 0) {
+			--i;
+		}
+
+		return Arrays.copyOf(bytes, i + 1);
+	}
+
 	public static void main(String[] args)
 			throws NoSuchAlgorithmException, InvalidAlgorithmParameterException, CryptoException, IOException {
-	 reconstructTheOriginalFileFromMinSlices(7);
-		
- 	}
+
+//		for (int i = 3; i < 7; i++) {
+//			CryptoUtils.decrypt(new File("D:/testen.txt_" + i + ".splt"), new File("D:/mesten_" + i + ".splt"));
+//		}
+		reconstructTheOriginalFileFromMinSlices(4);
+
+	}
 
 }

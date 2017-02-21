@@ -122,7 +122,5 @@ public class CryptoUtils {
 		}
 	}
 
-	public static void main(String[] args) throws InvalidAlgorithmParameterException, CryptoException {
-		decrypt(new File("D:/IDA.pdf_10.splt"), new File("D:/TFile.txt"));
-	}
+	 
 }
