@@ -15,6 +15,7 @@ public class Matrix {
 
 	private long[][] elements;
 	private int rows, columns;
+	final static int  FIELD_SIZE = 1024;
 
 	/**
 	 * Constructs a Matrix with 0 rows and columns and with no elements.
@@ -238,7 +239,7 @@ public class Matrix {
 	}
 
 	/**
-	 * Returns the Vandermonde matrix associated with a vector in GF256.
+	 * Returns the Vandermonde matrix associated with a vector in GF2^10.
 	 * 
 	 * @param x
 	 *            the second column coefficient
@@ -246,10 +247,10 @@ public class Matrix {
 	 */
 	public long[][] vandermonde(int n, int m, GF2N galoisField) {
 
-		final long[][] table = new long[256][256];
+		final long[][] table = new long[FIELD_SIZE][FIELD_SIZE];
 
-		for (int a = 0; a < 256; a++)
-			for (int b = 0; b < 256; b++)
+		for (int a = 0; a < FIELD_SIZE; a++)
+			for (int b = 0; b < FIELD_SIZE; b++)
 				table[a][b] = galoisField.multiply(a, b);
 
 		long[][] vandermonde = new long[n][m];
@@ -257,6 +258,7 @@ public class Matrix {
 			for (int j = 0; j < m; j++) {
 				vandermonde[i][j] = (j == 0 ? 1 : table[(int) vandermonde[i][j - 1]][i]);
 			}
+			System.out.println(Arrays.toString(vandermonde[i]));
 		}
 
 		return vandermonde;

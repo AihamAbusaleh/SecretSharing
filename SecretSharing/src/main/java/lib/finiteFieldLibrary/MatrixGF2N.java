@@ -185,8 +185,7 @@ public class MatrixGF2N implements GaloisFieldMatrixArithmetic {
                 }
             }
         }
-
-        //Prepare result, it is the second half of the inverseMatrix
+         //Prepare result, it is the second half of the inverseMatrix
         Matrix result = new Matrix(matrix.getRows(), matrix.getRows());
         for (int x = 0; x < inverseMatrix.getRows(); x++) {
             long value = inverseMatrix.getElement(x, x);

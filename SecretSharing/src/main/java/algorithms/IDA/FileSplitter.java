@@ -6,13 +6,6 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.Arrays;
-import java.util.Random;
-
-import org.apache.http.impl.cookie.PublicSuffixFilter;
-
-import com.google.api.client.testing.util.TestableByteArrayInputStream;
-
-import algorithms.AES.CryptoUtils;
 import lib.finiteFieldLibrary.GF2N;
 import lib.finiteFieldLibrary.Matrix;
 import lib.finiteFieldLibrary.MatrixGF2N;
@@ -22,7 +15,7 @@ import lib.finiteFieldLibrary.MatrixGF2N;
  */
 public class FileSplitter {
 
-	static long irreduciblePolynomial = 265;
+	static long irreduciblePolynomial = 1033; // GF2^10
 	static GF2N galoisField = new GF2N(irreduciblePolynomial);
 	static MatrixGF2N matGf = new MatrixGF2N(galoisField);
 
@@ -123,7 +116,7 @@ public class FileSplitter {
 	 *            should be split
 	 * @param min
 	 *            number of columns
-	 * @return random encrypting matrix in GF256
+	 * @return random encrypting matrix in GF2^10
 	 */
 	public static Matrix createEncryptingMatrix(int max, int min) {
 

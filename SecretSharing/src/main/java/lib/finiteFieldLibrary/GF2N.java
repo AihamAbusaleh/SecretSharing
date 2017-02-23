@@ -98,6 +98,7 @@ public class GF2N implements GaloisFieldArithmetic {
 
     @Override
     public long invert(long element) {
+    	 
         isInField(element);
         if (element == 1) {
             return 1;
@@ -140,8 +141,9 @@ public class GF2N implements GaloisFieldArithmetic {
 
             if (remainder == 0 && denumerator != 1) {
             	 
-                throw new MathArithmeticException("Cannot compute inverse"
-                        + " for this element.");
+             throw new MathArithmeticException("Cannot compute inverse"
+                      + " for this element.");
+             
             }
 
             //resultList data neccessary to find Bezout's identity

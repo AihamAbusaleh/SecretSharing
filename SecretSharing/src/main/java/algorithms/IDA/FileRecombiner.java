@@ -32,10 +32,10 @@ import lib.finiteFieldLibrary.MatrixGF2N;
  */
 public class FileRecombiner {
 
-	static long irreduciblePolynomial = 265;
+	static long irreduciblePolynomial = 1033;
 	static GF2N galoisField = new GF2N(irreduciblePolynomial);
 	static MatrixGF2N matGf = new MatrixGF2N(galoisField);
-
+	static final String PATH = "D:/";
 	/**
 	 * @param min
 	 *            the number of slices
@@ -47,7 +47,7 @@ public class FileRecombiner {
 	public static File[] getEncryptedSlices(int min)
 			throws InvalidAlgorithmParameterException, CryptoException, IOException {
 
-		File dir = new File("D:/");
+		File dir = new File(PATH); 
 		File[] filesInDir = dir.listFiles(new Extension());
 		File[] filesInDirMin = new File[min];
 		int i = 0;
@@ -61,7 +61,8 @@ public class FileRecombiner {
 			if (i != min) {
 
 				dec = CryptoUtils.decrypt(f, temp);
-
+				dec = CryptoUtils.decrypt(f, temp);
+				dec = CryptoUtils.decrypt(f, temp);
 				filesInDirMin[i] = dec;
 
 				i++;
@@ -100,7 +101,7 @@ public class FileRecombiner {
 		int index;
 
 		index = filesInDir[0].getName().lastIndexOf('_');
-		File dest = new File("D:/" + filesInDir[0].getName().substring(0, index));
+		File dest = new File(PATH + filesInDir[0].getName().substring(0, index)); // change the path
 		// File dest = new File("D:/" + "original");
 
 		List<File> allSlices = new ArrayList<File>();
@@ -202,10 +203,7 @@ public class FileRecombiner {
 	public static void main(String[] args)
 			throws NoSuchAlgorithmException, InvalidAlgorithmParameterException, CryptoException, IOException {
 
-//		for (int i = 3; i < 7; i++) {
-//			CryptoUtils.decrypt(new File("D:/testen.txt_" + i + ".splt"), new File("D:/mesten_" + i + ".splt"));
-//		}
-		reconstructTheOriginalFileFromMinSlices(4);
+  	reconstructTheOriginalFileFromMinSlices(12);
 
 	}
 
